@@ -1,0 +1,20 @@
+[
+    {
+        "user": "Noah",
+        "difficulty": 15,
+        "questions": "<ul>\n    <li>In an ancient market, a trader sells spices in bundles of 7 and 13. If Noah wants to buy exactly 100 bundles, using only these two types, how many different combinations of 7-bundle and 13-bundle options are possible?</li>\n    <li>Noah is exploring a magical forest where each magical tree doubles in size every night. If a tree starts at 1 meter tall on day 0 and reaches 128 meters by a certain day, on which day does it reach 128 meters, and what was its height the day before?</li>\n    <li>In a distant galaxy, a spaceship can travel a distance covered by the Fibonacci sequence, where each number is the sum of the two preceding ones. If the spaceship travels the 10th Fibonacci distance on Monday and the 12th on Wednesday, what distance does it cover on Tuesday, and what is the total distance traveled from Monday to Wednesday?</li>\n</ul>",
+        "timestamp": "2025-06-28 01:28:47"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 15,
+        "questions": "<ul>\n    <li>Noah is exploring a mysterious cave filled with numbered stones. Each stone has a number that is the sum of the two previous stones in the sequence, starting with the numbers 3 and 5. If he picks up the 10th stone, what number does it have?</li>\n    <li>Noah is reading about ancient mathematics and learns about the magic square, a 3x3 grid where the sum of numbers in each row, column, and diagonal is the same. If the magic constant is 15 and the grid starts with the top row as 8, 1, 6, what are the numbers in the bottom row of the grid?</li>\n    <li>Noah is building a mini roller coaster for his science project. The track forms a loop with a circumference of 18 meters. If Noah wants to place support beams every 1.5 meters along the loop, how many support beams does he need to ensure the entire loop is supported?</li>\n</ul>",
+        "timestamp": "2025-06-28 01:40:50"
+    },
+    {
+        "user": "Dylan",
+        "difficulty": 11,
+        "questions": "\n<ul>\n    <li>In a magical forest, there are trees that grow only in groups of 3. Each tree produces 7 golden apples. If Dylan collects apples from 5 groups of trees, how many golden apples does he have in total?</li>\n    <li>Dylan is helping to set up a treasure hunt. He needs to place clues at different locations. If there are 4 treasure boxes, and each box has 3 unique clues, how many different clues does Dylan need to prepare in total?</li>\n    <li>Dylan is creating a pattern using colored beads. He uses 2 red beads, followed by 3 blue beads, and then 4 green beads. If he repeats this pattern 3 times, how many beads has he used in total?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 01:54:11"
+    }
+]

@@ -12,7 +12,14 @@
             <button class="btn" type="submit">Back to Today's Tasks</button>
         </form>
         {% for date in sorted_dates %}
-            <h2 style="margin-top:30px;">{{ date }}</h2>
+            <h2 style="margin-top:30px;">
+                {{ date }}
+                {% if date_stars[date] == 2 %}
+                    <span style="font-size: 1.5em; color: gold;">&#11088;&#11088;</span>
+                {% elif date_stars[date] == 1 %}
+                    <span style="font-size: 1.5em; color: gold;">&#11088;</span>
+                {% endif %}
+            </h2>
             <table class="task-table">
                 <tr>
                     <th>Task</th>
@@ -35,3 +42,5 @@
             </table>
         {% endfor %}
     </div>
+</body>
+</html>

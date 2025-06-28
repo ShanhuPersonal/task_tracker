@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parent Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Parent Portal</h1>
+        {% if message %}
+            <p style="color: green;">{{ message }}</p>
+        {% endif %}
+        <form method="post" style="margin-bottom: 20px;">
+            <label for="selected_user">Select User:</label>
+            <select name="selected_user" id="selected_user" onchange="this.form.submit()">
+                <option value="">--Choose--</option>
+                {% for user in users %}
+                    <option value="{{ user }}" {% if selected_user == user %}selected{% endif %}>{{ user }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        {% if selected_user %}
+            <h2>Tasks for {{ selected_user }}</h2>
+            <table class="task-table">
+                <tr>
+                    <th>Task</th>
+                    <th>Frequency</th>
+                    <th>Actions</th>
+                </tr>
+                {% for t in user_tasks[selected_user] %}
+                <tr>
+                    <form method="post">
+                        <td>
+                            <input type="hidden" name="user" value="{{ selected_user }}">
+                            <input type="hidden" name="old_task" value="{{ t.task }}">
+                            <input type="text" name="new_task" value="{{ t.task }}" required>
+                        </td>
+                        <td>
+                            <input type="text" name="frequency" value="{{ t.frequency }}" required>
+                        </td>
+                        <td>
+                            <button class="btn" type="submit" name="action" value="edit">Edit</button>
+                            <button class="btn" type="submit" name="action" value="delete" onclick="return confirm('Delete this task?');">Delete</button>
+                        </td>
+                    </form>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <form method="post">
+                        <td>
+                            <input type="hidden" name="user" value="{{ selected_user }}">
+                            <input type="text" name="task" placeholder="New Task" required>
+                        </td>
+                        <td>
+                            <input type="text" name="frequency" placeholder="Frequency" required>
+                        </td>
+                        <td>
+                            <button class="btn" type="submit" name="action" value="add">Add</button>
+                        </td>
+                    </form>
+                </tr>
+            </table>
+        {% endif %}
+        <form action="{{ url_for('home') }}" method="get" style="margin-top: 30px;">
+            <button class="btn" type="submit">Back to Home</button>
+        </form>
+    </div>
+</body>
