@@ -1,0 +1,81 @@
+body {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #ff6f61;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0 #fff176;
+}
+
+.container {
+    max-width: 1200px; /* Increased for iPad horizontal */
+    margin: 40px auto;
+    background: #fffbe7;
+    border-radius: 25px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    padding: 30px;
+    text-align: center;
+    overflow-x: auto; /* Allow horizontal scroll if needed */
+}
+
+.dropdown {
+    margin: 20px 0;
+}
+
+button, .btn {
+    padding: 12px 28px;
+    background: #ffb347;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.2s;
+}
+
+button:hover, .btn:hover {
+    background: #ffcc33;
+}
+
+img.kid-img {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+.task-table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+    margin: 30px auto 0 auto;
+    font-size: 1.2em;
+}
+
+.task-table th, .task-table td {
+    border: 1px solid #ffe0b2;
+    padding: 12px;
+    text-align: center;
+}
+
+.status-todo {
+    background: #ffd6e0;
+    color: #d72660;
+    padding: 6px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.status-done {
+    background: #c8f7c5;
+    color: #388e3c;
+    padding: 6px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    display: inline-block;
+}

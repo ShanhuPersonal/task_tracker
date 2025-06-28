@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Today's Tasks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Today's Tasks <span style="font-size:0.6em; color:#888;">({{ today }})</span></h1>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+            <h2 style="color:#4caf50; margin-bottom: 0;">Hi, {{ user }}!</h2>
+            <form action="{{ url_for('home') }}" method="get" style="margin:0;">
+                <button class="btn" type="submit" style="padding: 8px 18px; font-size: 1em;">Change User</button>
+            </form>
+            <form action="{{ url_for('history') }}" method="get" style="margin:0;">
+                <button class="btn" type="submit" style="padding: 8px 18px; font-size: 1em;">Show History</button>
+            </form>
+        </div>
+        <table class="task-table">
+            <tr>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Time of Complete</th>
+                <th>Action</th>
+            </tr>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.task }}</td>
+                <td>
+                    {% if task.status == 'TODO' %}
+                        <span class="status-todo">TODO</span>
+                    {% else %}
+                        <span class="status-done">Done</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.status == 'Done' and task.time %}
+                        {{ task.time }}
+                    {% else %}
+                        ---
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.status == 'TODO' %}
+                    <form method="post" style="margin:0;">
+                        <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
+                        <button class="btn" type="submit" name="action" value="mark">Mark Done</button>
+                    </form>
+                    {% else %}
+                    <form method="post" style="margin:0;">
+                        <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
+                        <button class="btn" type="submit" name="action" value="unmark">Unmark Done</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
