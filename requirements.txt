@@ -1,0 +1,20 @@
+# Flask Task Tracker Requirements
+# Core Flask framework and extensions
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.0.5
+
+# Database
+SQLAlchemy==2.0.23
+
+# OpenAI integration
+openai==1.51.2
+
+# Standard library packages (included with Python)
+# datetime - built-in
+# os - built-in
+# json - built-in
+
+# Development and testing (optional)
+# pytest==7.4.3
+# pytest-flask==1.3.0

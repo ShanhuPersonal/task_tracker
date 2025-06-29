@@ -1,22 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}AI Problems{% endblock %}
+{% block title %}🧠 Brain Challenge Zone! 🧠{% endblock %}
 
 {% block content %}
     <div class="container my-4">
         <div class="app-container p-4">
             <!-- Header -->
             <div class="text-center mb-4">
-                <h2 class="text-primary-custom">Hi {{ user }}, here are your AI-generated problems for {{ today }}:</h2>
+                <h2 class="text-primary-custom">🧠 Hey {{ user }}! Ready for some BRAIN POWER challenges? 🧠</h2>
+                <p class="text-success-custom fs-5">{{ today }} - Time to show off your smarts! 💪</p>
             </div>
 
             <!-- Action Buttons -->
             <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center mb-4">
                 <form action="{{ url_for('ai_problems.refresh_questions') }}" method="post">
                     <input type="hidden" name="user" value="{{ user }}">
-                    <button class="btn btn-success" type="submit">Refresh Questions</button>
+                    <button class="btn btn-success btn-lg" type="submit">🔄 New Brain Teasers!</button>
                 </form>
-                <a href="{{ url_for('tasks.tasks') }}" class="btn btn-secondary">Back to Tasks</a>
+                <a href="{{ url_for('tasks.tasks') }}" class="btn btn-secondary btn-lg">🎯 Back to Tasks</a>
             </div>
 
             <!-- Problems Table -->
@@ -24,18 +25,18 @@
                 <table class="table table-striped custom-table">
                     <thead>
                         <tr>
-                            <th class="text-start">Question</th>
-                            <th class="text-center">Action</th>
+                            <th class="text-start">🧩 Brain Challenge</th>
+                            <th class="text-center">🔍 Need a Clue?</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for question in ai_problems.split('<li>')[1:4] %}
                         <tr>
-                            <td class="text-start">{{ question.split('</li>')[0] }}</td>
+                            <td class="text-start fw-semibold">🤔 {{ question.split('</li>')[0] }}</td>
                             <td class="text-center">
                                 <form method="post" action="{{ url_for('ai_problems.get_hint') }}">
                                     <input type="hidden" name="question_id" value="{{ loop.index }}">
-                                    <button class="btn btn-primary btn-sm" type="submit">Get Hint</button>
+                                    <button class="btn btn-primary btn-sm" type="submit">💡 Get Super Hint!</button>
                                 </form>
                             </td>
                         </tr>
@@ -46,17 +47,17 @@
 
             <!-- Difficulty Controls -->
             <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 mt-4">
-                <span class="fw-semibold">Current Difficulty: <strong class="text-primary">{{ difficulty }}</strong></span>
+                <span class="fw-semibold fs-5">🎯 Challenge Level: <strong class="text-primary">{{ difficulty }}</strong> 🎯</span>
                 <div class="d-flex gap-2">
                     <form action="{{ url_for('ai_problems.change_difficulty') }}" method="post" class="d-inline">
                         <input type="hidden" name="user" value="{{ user }}">
                         <input type="hidden" name="difficulty_action" value="increase">
-                        <button class="btn btn-outline-primary btn-sm" type="submit">Increase</button>
+                        <button class="btn btn-success btn-sm" type="submit">🔥 Level UP!</button>
                     </form>
                     <form action="{{ url_for('ai_problems.change_difficulty') }}" method="post" class="d-inline">
                         <input type="hidden" name="user" value="{{ user }}">
                         <input type="hidden" name="difficulty_action" value="decrease">
-                        <button class="btn btn-outline-primary btn-sm" type="submit">Decrease</button>
+                        <button class="btn btn-warning btn-sm" type="submit">😅 Make Easier</button>
                     </form>
                 </div>
             </div>
