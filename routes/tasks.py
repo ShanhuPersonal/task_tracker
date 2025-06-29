@@ -128,8 +128,6 @@ def tasks():
     all_done = all(task['status'] == 'Done' for task in tasks)
     all_done_before_noon = check_all_done_before_noon(tasks)
 
-    ai_problems = fetch_ai_problems(3, user.name, difficulty, force_refresh=force_refresh)
-
     today = datetime.now().strftime("%A, %B %d, %Y")
 
     return render_template(
@@ -137,8 +135,4 @@ def tasks():
         user=user.name,
         tasks=tasks,
         today=today,
-        ai_problems=ai_problems,
-        all_done=all_done,
-        all_done_before_noon=all_done_before_noon,
-        difficulty=difficulty
     )

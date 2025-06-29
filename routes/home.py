@@ -9,5 +9,8 @@ def home():
         selected_user_id = request.form.get('selected_user_id')
         if selected_user_id:
             session['user_id'] = int(selected_user_id)
+            user = User.query.get(int(selected_user_id))
+            if user:
+                session['user'] = user.name
             return redirect(url_for('tasks.tasks'))
     return render_template('index.html')

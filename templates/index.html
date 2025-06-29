@@ -1,32 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Kid's Task Tracker</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <img src="https://cdn.pixabay.com/photo/2017/01/31/13/14/animal-2023924_1280.png" alt="Happy Kid" class="kid-img">
-        <h1>Welcome to the Task Tracker!</h1>
-        <p>Track your tasks and have fun while doing it! 🎉</p>
+{% extends "base.html" %}
 
-        <!-- Form for Noah -->
-        <form method="post" action="{{ url_for('home.home') }}" style="display: inline-block; margin-right: 20px;">
-            <input type="hidden" name="selected_user_id" value="1">
-            <button class="btn" type="submit">Go Noah!</button>
-        </form>
+{% block title %}Kid's Task Tracker{% endblock %}
 
-        <!-- Form for Dylan -->
-        <form method="post" action="{{ url_for('home.home') }}" style="display: inline-block;">
-            <input type="hidden" name="selected_user_id" value="2">
-            <button class="btn" type="submit">Go Dylan!</button>
-        </form>
+{% block content %}
+    <div class="container my-4">
+        <div class="app-container p-4 text-center">
+            <img src="https://cdn.pixabay.com/photo/2017/01/31/13/14/animal-2023924_1280.png" 
+                 alt="Happy Kid" class="kid-img mb-4">
+            
+            <h1 class="display-4 text-primary-custom mb-3">Welcome to the Task Tracker!</h1>
+            <p class="lead mb-4">Track your tasks and have fun while doing it! 🎉</p>
 
-        <form action="{{ url_for('parent.parent') }}" method="get" style="margin-top: 30px;">
-            <button class="btn" type="submit" style="background: #6c63ff;">Parent Portal</button>
-        </form>
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                <!-- Form for Noah -->
+                <form method="post" action="{{ url_for('home.home') }}">
+                    <input type="hidden" name="selected_user_id" value="1">
+                    <button class="btn btn-primary btn-lg px-4" type="submit">Go Noah!</button>
+                </form>
+
+                <!-- Form for Dylan -->
+                <form method="post" action="{{ url_for('home.home') }}">
+                    <input type="hidden" name="selected_user_id" value="2">
+                    <button class="btn btn-primary btn-lg px-4" type="submit">Go Dylan!</button>
+                </form>
+            </div>
+
+            <div class="mt-4">
+                <form action="{{ url_for('parent.parent') }}" method="get">
+                    <button class="btn btn-outline-primary" type="submit">Parent Portal</button>
+                </form>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+{% endblock %}

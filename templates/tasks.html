@@ -1,179 +1,222 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Today's Tasks</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1>Today's Tasks <span style="font-size:0.6em; color:#888;">({{ today }})</span></h1>
-            <div style="display: flex; gap: 10px;">
-                <form action="{{ url_for('home.home') }}" method="get" style="margin:0;">
-                    <button class="btn" type="submit" style="padding: 8px 18px; font-size: 1em;">Home</button>
+{% extends "base.html" %}
+
+{% block title %}Today's Tasks{% endblock %}
+
+{% block content %}
+    <div class="container my-4">
+        <div class="app-container p-4">
+            <!-- Header Section -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+                <h1 class="text-primary-custom mb-2 mb-md-0">
+                    Today's Tasks 
+                    <small class="text-muted fs-6">({{ today }})</small>
+                </h1>
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('home.home') }}" class="btn btn-primary">Home</a>
+                    <a href="{{ url_for('history.history') }}" class="btn btn-secondary">Show History</a>
+                </div>
+            </div>
+
+            <!-- Welcome Message -->
+            <div class="text-center mb-4">
+                <h2 class="text-success-custom">Hi, {{ user }}!</h2>
+            </div>
+
+            <!-- Big Star Section -->
+            {% if all_done_before_noon %}
+            <div class="text-center my-4">
+                <div class="display-1 star-twinkle">⭐⭐</div>
+                <h3 class="text-success-custom mt-3">Amazing! All tasks (for today) done before noon!</h3>
+            </div>
+            {% elif all_done %}
+            <div class="text-center my-4">
+                <div class="display-1 star-twinkle">⭐</div>
+                <h3 class="text-success-custom mt-3">Great job! All tasks (for today) are done!</h3>
+            </div>
+            {% endif %}
+
+            <!-- Tasks Table -->
+            <div class="table-responsive">
+                <table class="table table-striped custom-table">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Frequency</th>
+                            <th>Duration (min)</th>
+                            <th>Status</th>
+                            <th>Time of Complete</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                            <td class="fw-semibold">{{ task.task }}</td>
+                            <td>{{ task.frequency }}</td>
+                            <td>
+                                {% if task.duration != "as needed" %}
+                                    {{ task.duration }} 
+                                    <span class="clock-icon ms-1" onclick="startTimer('{{ task.duration }}', '{{ task.task }}')">⏰</span>
+                                {% else %}
+                                    {{ task.duration }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.status == 'TODO' %}
+                                    <span class="badge status-todo">TODO</span>
+                                {% else %}
+                                    <span class="badge status-done">Done</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.status == 'Done' and task.time %}
+                                    {{ task.time }}
+                                {% else %}
+                                    <span class="text-muted">---</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.status == 'TODO' %}
+                                    <form method="post" class="d-inline">
+                                        <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
+                                        <button class="btn btn-success btn-sm" type="submit" name="action" value="mark">Mark Done</button>
+                                    </form>
+                                {% else %}
+                                    <form method="post" class="d-inline">
+                                        <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
+                                        <button class="btn btn-danger btn-sm" type="submit" name="action" value="unmark">Unmark Done</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Navigation Button to AI Problems Page -->
+            <div class="text-center mt-4">
+                <form action="{{ url_for('ai_problems.ai_problems') }}" method="get">
+                    <button class="btn btn-primary" type="submit">View today's AI questions</button>
                 </form>
-                <form action="{{ url_for('history.history') }}" method="get" style="margin:0;">
-                    <button class="btn" type="submit" style="padding: 8px 18px; font-size: 1em;">Show History</button>
-                </form>
+            </div>
+
+            <!-- Timer Modal -->
+            <div class="modal fade" id="timerModal" tabindex="-1" aria-labelledby="timerModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="background-color: #fce4ec; border: 5px solid #f06292; border-radius: 20px;">
+                        <div class="modal-header" style="background-color: #f8bbd0; border-bottom: 3px solid #f06292;">
+                            <h5 class="modal-title" id="timerModalLabel" style="color: #880e4f; font-family: 'Trebuchet MS', 'Arial Black', sans-serif; font-weight: bold;">Task Timer</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <span id="timer-display" style="font-size: 3em; color: #d81b60; font-family: 'Trebuchet MS', 'Arial Black', sans-serif; font-weight: bold; letter-spacing: 2px;">00:00</span>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn" id="pause-button" onclick="pauseTimer()" style="background-color: #f06292; color: white; font-family: 'Trebuchet MS', 'Arial Black', sans-serif; font-weight: bold;">Pause</button>
+                            <button type="button" class="btn" data-bs-dismiss="modal" onclick="closeTimer()" style="background-color: #f06292; color: white; font-family: 'Trebuchet MS', 'Arial Black', sans-serif; font-weight: bold;">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+{% endblock %}
 
-        <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
-            <h2 style="color:#4caf50; margin-bottom: 0;">Hi, {{ user }}!</h2>
-        </div>
-
-        <!-- Big Star Section -->
-        {% if all_done_before_noon %}
-        <div id="big-star" style="text-align: center; margin: 30px 0;">
-            <span style="font-size: 6em; color: gold;">&#11088;&#11088;</span>
-            <div style="font-size: 2em; color: #4caf50; margin-top: 10px;">Amazing! All tasks (for today) done before noon!</div>
-        </div>
-        {% elif all_done %}
-        <div id="big-star" style="text-align: center; margin: 30px 0;">
-            <span style="font-size: 6em; color: gold;">&#11088;</span>
-            <div style="font-size: 2em; color: #4caf50; margin-top: 10px;">Great job! All tasks (for today) are done!</div>
-        </div>
-        {% endif %}
-
-        <table class="task-table">
-            <tr>
-                <th>Task</th>
-                <th>Frequency</th>
-                <th>Duration (min)</th>
-                <th>Status</th>
-                <th>Time of Complete</th>
-                <th>Action</th>
-            </tr>
-            {% for task in tasks %}
-            <tr>
-                <td>{{ task.task }}</td>
-                <td>{{ task.frequency }}</td>
-                <td>
-                    {% if task.duration != "as needed" %}
-                        {{ task.duration }} <i class="clock-icon" onclick="startTimer('{{ task.duration }}')">⏰</i>
-                    {% else %}
-                        {{ task.duration }}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if task.status == 'TODO' %}
-                        <span class="status-todo">TODO</span>
-                    {% else %}
-                        <span class="status-done">Done</span>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if task.status == 'Done' and task.time %}
-                        {{ task.time }}
-                    {% else %}
-                        ---
-                    {% endif %}
-                </td>
-                <td>
-                    {% if task.status == 'TODO' %}
-                    <form method="post" style="margin:0;">
-                        <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
-                        <button class="btn btn-todo" type="submit" name="action" value="mark">Mark Done</button>
-                    </form>
-                    {% else %}
-                    <form method="post" style="margin:0;">
-                        <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
-                        <button class="btn btn-done" type="submit" name="action" value="unmark">Unmark Done</button>
-                    </form>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-
-        <!-- AI Problems Section -->
-        <h2 style="margin-top: 40px; display: inline-block;">AI Problems</h2>
-        <form method="post" style="display: inline-block; margin-left: 20px;">
-            <button class="btn" type="submit" name="refresh_questions" value="true" style="padding: 5px 10px; font-size: 0.8em;">Refresh Questions</button>
-        </form>
-        <div style="float: right; text-align: right;">
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px;">
-            <!-- AI Problems Section -->
-            <div style="flex: 1; text-align: left;">
-                {{ ai_problems | safe }}
-            </div>
-        </div>
-
-        <!-- Controls Section at the Bottom -->
-        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 10px;">
-            <div style="font-size: 0.9em; display: flex; align-items: center;">
-                Current Difficulty: <strong>{{ difficulty }}</strong>
-            </div>
-            <form method="post" style="margin: 0; display: flex; align-items: center;">
-                <a href="#" onclick="this.closest('form').submit();" style="text-decoration: underline; color: blue; cursor: pointer; font-size: 0.8em;">Increase</a>
-                <input type="hidden" name="difficulty_action" value="increase">
-            </form>
-            <form method="post" style="margin: 0; display: flex; align-items: center;">
-                <a href="#" onclick="this.closest('form').submit();" style="text-decoration: underline; color: blue; cursor: pointer; font-size: 0.8em;">Decrease</a>
-                <input type="hidden" name="difficulty_action" value="decrease">
-            </form>
-        </div>
-    </div>
-
-    <div id="timer-popup" class="hidden">
-        <div class="timer-content">
-            <span id="timer-display">00:00</span>
-            <button id="pause-button" onclick="pauseTimer()">Pause</button>
-            <button id="close-button" onclick="closeTimer()">Close</button>
-        </div>
-    </div>
-
+{% block extra_scripts %}
     <script>
-    let timerInterval;
-    let remainingTime;
+        let timerInterval;
+        let remainingTime;
 
-    function startTimer(minutes) {
-        console.log('startTimer called with minutes:', minutes); // Debugging log
-        const popup = document.getElementById('timer-popup');
-        const display = document.getElementById('timer-display');
-        const pauseButton = document.getElementById('pause-button');
+        function startTimer(minutes, taskName) {
+            console.log('startTimer called with minutes:', minutes, 'and task:', taskName);
+            const display = document.getElementById('timer-display');
+            const pauseButton = document.getElementById('pause-button');
+            const modalTitle = document.getElementById('timerModalLabel');
 
-        remainingTime = parseInt(minutes) * 60;
-        console.log('Remaining time in seconds:', remainingTime); // Debugging log
-        popup.classList.remove('hidden');
-        console.log('Popup visibility classes:', popup.classList); // Debugging log
-        console.log('Popup element:', popup); // Debugging log
-        updateDisplay();
+            // Update the modal title with the task name
+            modalTitle.textContent = taskName || 'Task Timer';
 
-        timerInterval = setInterval(() => {
-            if (remainingTime > 0) {
-                remainingTime--;
-                updateDisplay();
-            } else {
-                clearInterval(timerInterval);
-                display.textContent = 'Complete!';
-                pauseButton.style.display = 'none';
-            }
-        }, 1000);
-    }
+            remainingTime = parseInt(minutes) * 60;
+            const timerModal = new bootstrap.Modal(document.getElementById('timerModal'));
+            timerModal.show();
+            updateDisplay();
 
-    function updateDisplay() {
-        const minutes = Math.floor(remainingTime / 60);
-        const seconds = remainingTime % 60;
-        document.getElementById('timer-display').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
+            timerInterval = setInterval(() => {
+                if (remainingTime > 0) {
+                    remainingTime--;
+                    updateDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    display.textContent = 'Complete!';
+                    display.style.color = '#4caf50';
+                    display.style.fontSize = '4em';
+                    display.style.fontFamily = 'Comic Sans MS', cursive;
+                    display.style.animation = 'pulse 1s infinite';
+                    pauseButton.style.display = 'none';
 
-    function pauseTimer() {
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        } else {
-            startTimer(remainingTime / 60);
+                    // Add confetti effect
+                    const confettiContainer = document.createElement('div');
+                    confettiContainer.id = 'confetti';
+                    confettiContainer.style.position = 'absolute';
+                    confettiContainer.style.top = '0';
+                    confettiContainer.style.left = '0';
+                    confettiContainer.style.width = '100%';
+                    confettiContainer.style.height = '100%';
+                    confettiContainer.style.pointerEvents = 'none';
+                    document.body.appendChild(confettiContainer);
+
+                    const confettiScript = document.createElement('script');
+                    confettiScript.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js';
+                    confettiScript.onload = () => {
+                        const confetti = window.confetti;
+                        confetti({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                    };
+                    document.body.appendChild(confettiScript);
+
+                    // Play a sound effect
+                    const audio = new Audio('https://www.myinstants.com/media/sounds/air-horn-club-sample.mp3');
+                    audio.play();
+                }
+            }, 1000);
         }
-    }
 
-    function closeTimer() {
-        const popup = document.getElementById('timer-popup');
-        popup.classList.add('hidden');
-        clearInterval(timerInterval);
-    }
+        function updateDisplay() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            document.getElementById('timer-display').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function pauseTimer() {
+            const pauseButton = document.getElementById('pause-button');
+
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                pauseButton.textContent = 'Unpause';
+            } else {
+                timerInterval = setInterval(() => {
+                    if (remainingTime > 0) {
+                        remainingTime--;
+                        updateDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        document.getElementById('timer-display').textContent = 'Complete!';
+                        pauseButton.style.display = 'none';
+                    }
+                }, 1000);
+                pauseButton.textContent = 'Pause';
+            }
+        }
+
+        function closeTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
     </script>
-</body>
-</html>
+{% endblock %}

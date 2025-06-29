@@ -2,6 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from extensions import db
 from routes import home, tasks, history, parent
+from routes.ai_problems import ai_problems_bp
 
 migrate = Migrate(db)
 
@@ -22,6 +23,7 @@ def create_app():
     app.register_blueprint(tasks)
     app.register_blueprint(history)
     app.register_blueprint(parent)
+    app.register_blueprint(ai_problems_bp)
 
     with app.app_context():
         db.create_all()  # Create tables if they don't exist

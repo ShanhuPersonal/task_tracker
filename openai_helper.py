@@ -1,6 +1,5 @@
 import openai
 from config import OPENAI_API_KEY
-import csv
 import os
 import json
 from datetime import datetime
@@ -27,12 +26,13 @@ def get_user_difficulty(user_name):
     Parameters:
         user_name (str): Name of the user (e.g., "Dylan" or "Noah").
     Returns:
-        int: The difficulty level for the user.
+        int: The difficulty level for the user (1-20, default 10).
     """
     user = User.query.filter_by(name=user_name).first()
-    if user:
-        return user.ai_difficulty
-    return 10  # Default difficulty if not found
+    if user and user.ai_difficulty is not None:
+        # Ensure the difficulty is within valid range
+        return max(1, min(20, user.ai_difficulty))
+    return 10  # Default difficulty if user not found or ai_difficulty is None
 
 def fetch_ai_problems(num_questions=3, user="Dylan", difficulty=12, force_refresh=False):
     """
@@ -133,5 +133,9 @@ def update_user_difficulty(user_name, new_difficulty):
     """
     user = User.query.filter_by(name=user_name).first()
     if user:
+        print(f"Updating difficulty for user {user_name} from {user.ai_difficulty} to {new_difficulty}")
         user.ai_difficulty = new_difficulty
         db.session.commit()
+        print(f"Difficulty updated successfully for user {user_name}")
+    else:
+        print(f"User {user_name} not found in the database")

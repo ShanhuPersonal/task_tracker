@@ -64,5 +64,47 @@
         "difficulty": 15,
         "questions": "\n<ul>\n    <li>In a distant land, there are two magical wells. One well doubles the number of pebbles you have when you drop one in, and the other well triples them. If Noah starts with 3 pebbles and uses each well once, what is the maximum number of pebbles he can have?</li>\n    <li>Noah is designing a garden in the shape of a perfect square. He wants to plant a different type of flower in each square meter of his garden. If he ends up using 64 different types of flowers, how long is each side of the garden?</li>\n    <li>Noah's class is going on a field trip to the zoo. There are 120 students, and they need to be divided equally into buses, with each bus holding exactly 15 students. How many buses are needed, and if one bus breaks down, how many students will be left without a bus?</li>\n</ul>\n",
         "timestamp": "2025-06-28 19:28:13"
+    },
+    {
+        "user": "default_user",
+        "difficulty": 10,
+        "questions": "\n<ul>\n    <li>In the ancient city of Babylon, people used a number system based on 60 instead of 10. If a Babylonian merchant had 2 baskets of apples, with 30 apples in each basket, how many more apples would he need to have a total that matches the base-60 value of 90?</li>\n    <li>A puzzle from Japan involves a grid with numbers. In a 3x3 square, fill in each cell with a number from 1 to 9 such that each row, column, and diagonal adds up to 15. What number should be placed in the center if the top row reads 8, 1, and 6?</li>\n    <li>In a small village in India, a farmer has a magical cow that produces double the amount of milk every day. If the cow produces 1 liter of milk on the first day, how many liters of milk will it produce on the 5th day?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 21:48:07"
+    },
+    {
+        "user": "Guest",
+        "difficulty": 10,
+        "questions": "\n<ul>\n    <li>In a magical forest, every tree has 3 branches, and each branch has 5 apples. If there are 12 trees in the forest, how many apples are there in total?</li>\n    <li>Noah is baking cookies, and each batch requires 2 cups of flour. If Noah wants to bake 15 batches, but he only has a 20-cup bag of flour, how many more cups of flour does he need?</li>\n    <li>During a festival, Dylan noticed that every 4th person entering the gate received a balloon, and every 7th person received a sticker. If 100 people entered the gate, how many received both a balloon and a sticker?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 22:03:26"
+    },
+    {
+        "user": "Guest",
+        "difficulty": 10,
+        "questions": "<ul>\n    <li>In the ancient city of Babylon, a trader has a magical camel that can carry twice the weight of a normal camel. If a normal camel can carry 250 kilograms, how much weight can the magical camel carry when transporting 5 golden statues, each weighing 30 kilograms?</li>\n    <li>A farmer in Egypt wants to plant a rectangular field with papyrus plants. If the field's length is 20 meters and the width is 15 meters, how many meters of fencing will the farmer need to enclose the entire field?</li>\n    <li>In a bustling market in Morocco, a merchant has 45 colorful rugs. If he arranges them in rows with 5 rugs in each row, how many rows of rugs will he be able to display, and how many rugs will he have left over?</li>\n</ul>",
+        "timestamp": "2025-06-28 22:03:30"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 15,
+        "questions": "\n<ul>\n    <li>In an ancient village, the villagers use a unique calendar system where each year consists of 9 months, and each month has 33 days. If today is the 10th day of the 5th month in the year 120, what day of the week will it be exactly 1,000 days from now?</li>\n    <li>Noah is designing a garden with a triangular shape. He has three types of fences: red, blue, and green. The length of the red fence is twice the length of the blue fence, and the green fence is 3 meters longer than the blue fence. If the perimeter of the garden is 57 meters, how long is each fence?</li>\n    <li>In a distant land, there is a magical river that flows in a pattern: for every 2 hours it flows north, it flows 1 hour south, and then rests for 1 hour. If the river starts flowing north at midnight, how many kilometers north will the water have flowed by 6 PM, given that the river flows at a speed of 4 kilometers per hour?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 22:09:01"
+    },
+    {
+        "user": "Dylan",
+        "difficulty": 13,
+        "questions": "\n<ul>\n    <li>In a magical garden, there are 7 rows of trees, and each row has the same number of trees. If there are a total of 56 trees, how many trees are there in each row?</li>\n    <li>Imagine you are an explorer on a treasure hunt. You come across a chest with 5 locks, and you have 8 keys. If each lock needs a different key, how many different combinations of keys can unlock all the locks?</li>\n    <li>In a fairytale land, there are 9 rainbow bridges, and each bridge can be crossed in 2 ways: walking or skipping. How many different ways can you cross all the bridges if you must cross each one once?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 22:50:14"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 16,
+        "questions": "\n<ul>\n    <li>In a magic square, the sum of numbers in each row, column, and diagonal is always the same. If you have a 3x3 magic square where the center number is 5, and the sum of each line is 15, what are the other numbers in the square?</li>\n    <li>Imagine a train that leaves Station A traveling at 60 km/h towards Station B. At the same time, a second train leaves Station B heading towards Station A at 40 km/h. If the distance between the two stations is 300 km, after how many hours will the two trains meet?</li>\n    <li>In a distant land, the currency is based on two coins: the Blip and the Blop. If 3 Blips are worth the same as 2 Blops, and together they sum up to 30 Blips, how many Blops are there?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 22:51:41"
+    },
+    {
+        "user": "Dylan",
+        "difficulty": 11,
+        "questions": "\n<ul>\n    <li>In the bustling market of Marrakech, a merchant has 24 colorful carpets. If he wants to arrange them in equal stacks with more than one carpet in each stack, how many different ways can he arrange the carpets?</li>\n    <li>In the magical forests of Finland, forest gnomes are planting enchanted flowers. Each gnome can plant 6 flowers in an hour. If there are 5 gnomes working together, how many flowers can they plant in 3 hours?</li>\n    <li>At a traditional Japanese festival, there are 12 lanterns hanging in a row. Every third lantern is red, starting from the first one. How many of the lanterns are red?</li>\n</ul>\n",
+        "timestamp": "2025-06-29 00:14:51"
     }
 ]

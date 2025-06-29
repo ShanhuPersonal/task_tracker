@@ -47,6 +47,22 @@ def parent():
                 task = Task(user_id=user_id, task=new_task, frequency=frequency, duration=int(duration) if duration else None)
                 db.session.add(task)
                 db.session.commit()
+        
+        elif action == 'edit_user':
+            user_id = request.form.get('edit_user_id')
+            name = request.form.get('user_name')
+            dob = request.form.get('user_dob')
+            ai_difficulty = request.form.get('user_ai_difficulty')
+            if user_id and name and dob and ai_difficulty:
+                user = User.query.get(user_id)
+                if user:
+                    user.name = name
+                    user.dob = dob
+                    # Ensure AI difficulty is between 1-20, default to 10
+                    difficulty = int(ai_difficulty) if ai_difficulty else 10
+                    user.ai_difficulty = max(1, min(20, difficulty))
+                    db.session.commit()
+                    return redirect(url_for('parent.parent', user_id=selected_user_id))
 
         return redirect(url_for('parent.parent', user_id=user_id))
 

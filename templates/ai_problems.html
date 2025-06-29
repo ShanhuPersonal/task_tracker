@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}AI Problems{% endblock %}
+
+{% block content %}
+    <div class="container my-4">
+        <div class="app-container p-4">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h2 class="text-primary-custom">Hi {{ user }}, here are your AI-generated problems for {{ today }}:</h2>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center mb-4">
+                <form action="{{ url_for('ai_problems.refresh_questions') }}" method="post">
+                    <input type="hidden" name="user" value="{{ user }}">
+                    <button class="btn btn-success" type="submit">Refresh Questions</button>
+                </form>
+                <a href="{{ url_for('tasks.tasks') }}" class="btn btn-secondary">Back to Tasks</a>
+            </div>
+
+            <!-- Problems Table -->
+            <div class="table-responsive">
+                <table class="table table-striped custom-table">
+                    <thead>
+                        <tr>
+                            <th class="text-start">Question</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for question in ai_problems.split('<li>')[1:4] %}
+                        <tr>
+                            <td class="text-start">{{ question.split('</li>')[0] }}</td>
+                            <td class="text-center">
+                                <form method="post" action="{{ url_for('ai_problems.get_hint') }}">
+                                    <input type="hidden" name="question_id" value="{{ loop.index }}">
+                                    <button class="btn btn-primary btn-sm" type="submit">Get Hint</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Difficulty Controls -->
+            <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 mt-4">
+                <span class="fw-semibold">Current Difficulty: <strong class="text-primary">{{ difficulty }}</strong></span>
+                <div class="d-flex gap-2">
+                    <form action="{{ url_for('ai_problems.change_difficulty') }}" method="post" class="d-inline">
+                        <input type="hidden" name="user" value="{{ user }}">
+                        <input type="hidden" name="difficulty_action" value="increase">
+                        <button class="btn btn-outline-primary btn-sm" type="submit">Increase</button>
+                    </form>
+                    <form action="{{ url_for('ai_problems.change_difficulty') }}" method="post" class="d-inline">
+                        <input type="hidden" name="user" value="{{ user }}">
+                        <input type="hidden" name="difficulty_action" value="decrease">
+                        <button class="btn btn-outline-primary btn-sm" type="submit">Decrease</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="mt-4">
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            <!-- Modal for displaying the hint -->
+            <div class="modal fade" id="hintModal" tabindex="-1" aria-labelledby="hintModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-primary-custom" id="hintModalLabel">Hint</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-start">
+                            {% if question %}
+                            <div class="mb-3">
+                                <strong class="text-primary">Question:</strong><br>
+                                {{ question }}
+                            </div>
+                            <hr>
+                            <div>
+                                <strong class="text-success">Hint:</strong><br>
+                                {{ hint }}
+                            </div>
+                            {% else %}
+                            {{ hint }}
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script>
+        // Automatically show the modal if a hint is available
+        document.addEventListener('DOMContentLoaded', function () {
+            {% if hint %}
+            var hint = {{ hint|tojson|safe }};
+            if (hint) {
+                var hintModal = new bootstrap.Modal(document.getElementById('hintModal'));
+                hintModal.show();
+            }
+            {% endif %}
+        });
+    </script>
+{% endblock %}

@@ -6,7 +6,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     dob = db.Column(db.String(10), nullable=False)
-    ai_difficulty = db.Column(db.Integer, nullable=False)
+    ai_difficulty = db.Column(db.Integer, nullable=False, default=10)
     parent = db.Column(db.String(50), nullable=False)
 
 class Task(db.Model):
