@@ -108,3 +108,107 @@ td {
     font-weight: bold;
     display: inline-block;
 }
+
+.btn-todo {
+    background: #4caf50; /* Green for Mark Done */
+    color: #fff;
+}
+
+.btn-todo:hover {
+    background: #388e3c;
+}
+
+.btn-done {
+    background: #f44336; /* Red for Unmark Done */
+    color: #fff;
+}
+
+.btn-done:hover {
+    background: #d32f2f;
+}
+
+.btn-edit {
+    background-color: #007bff; /* Blue for Edit */
+    color: #fff;
+}
+
+.btn-edit:hover {
+    background-color: #0056b3;
+}
+
+.btn-delete {
+    background-color: #dc3545; /* Red for Delete */
+    color: #fff;
+}
+
+.btn-delete:hover {
+    background-color: #a71d2a;
+}
+
+.btn-add {
+    background-color: #28a745; /* Green for Add */
+    color: #fff;
+}
+
+.btn-add:hover {
+    background-color: #1e7e34;
+}
+
+.dense-table th, .dense-table td {
+    padding: 6px 10px; /* Reduce padding for a denser look */
+    font-size: 0.9em; /* Slightly smaller font size */
+}
+
+.small-btn {
+    padding: 6px 12px; /* Smaller buttons */
+    font-size: 0.8em; /* Smaller font size */
+    border-radius: 8px; /* Adjust border radius */
+}
+
+.clock-icon {
+    cursor: pointer;
+    margin-left: 5px;
+    color: #007bff;
+    font-size: 1.2em;
+}
+
+.clock-icon:hover {
+    color: #0056b3;
+}
+
+#timer-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+}
+
+#timer-popup.hidden {
+    display: none;
+}
+
+.timer-content {
+    text-align: center;
+}
+
+#timer-display {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+#pause-button {
+    background-color: #ffc107;
+    color: white;
+}
+
+#close-button {
+    background-color: #dc3545;
+    color: white;
+}

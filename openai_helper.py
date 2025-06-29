@@ -4,6 +4,7 @@ import csv
 import os
 import json
 from datetime import datetime
+from models import User, db  # Import User model and db session
 
 # Initialize the OpenAI client
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
@@ -18,25 +19,19 @@ Only return the list. Do not include any additional text or explanations.
 To avoid repeating questions, ensure that the generated problems are unique and not similar to those previously generated. You can draw inspiration from various educational resources and examples from around the world. 
 """
 
-DIFFICULTY_FILE = os.path.join(os.path.dirname(__file__), 'data', 'user_difficulty.csv')
 QUESTIONS_LOG_FILE = os.path.join(os.path.dirname(__file__), 'data', 'questions_log.json')
 
-def get_user_difficulty(user):
+def get_user_difficulty(user_name):
     """
-    Reads the difficulty level for a specific user from the CSV file.
+    Reads the difficulty level for a specific user from the database.
     Parameters:
-        user (str): Name of the user (e.g., "Dylan" or "Noah").
+        user_name (str): Name of the user (e.g., "Dylan" or "Noah").
     Returns:
         int: The difficulty level for the user.
     """
-    try:
-        with open(DIFFICULTY_FILE, newline='', encoding='utf-8') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                if row['user'] == user:
-                    return int(row['difficulty'])
-    except Exception as e:
-        print(f"Error reading difficulty file: {e}")
+    user = User.query.filter_by(name=user_name).first()
+    if user:
+        return user.ai_difficulty
     return 10  # Default difficulty if not found
 
 def fetch_ai_problems(num_questions=3, user="Dylan", difficulty=12, force_refresh=False):
@@ -129,26 +124,14 @@ def save_questions_to_json(user, difficulty, problems_html):
     except Exception as e:
         print(f"Error saving questions to JSON file: {e}")
 
-def update_user_difficulty(user, new_difficulty):
+def update_user_difficulty(user_name, new_difficulty):
     """
-    Updates the difficulty level for a specific user in the CSV file.
+    Updates the difficulty level for a specific user in the database.
     Parameters:
-        user (str): Name of the user (e.g., "Dylan" or "Noah").
+        user_name (str): Name of the user (e.g., "Dylan" or "Noah").
         new_difficulty (int): The new difficulty level to set.
     """
-    try:
-        rows = []
-        with open(DIFFICULTY_FILE, newline='', encoding='utf-8') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                if row['user'] == user:
-                    row['difficulty'] = str(new_difficulty)
-                rows.append(row)
-        
-        with open(DIFFICULTY_FILE, 'w', newline='', encoding='utf-8') as csvfile:
-            fieldnames = ['user', 'difficulty']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(rows)
-    except Exception as e:
-        print(f"Error updating difficulty file: {e}")
+    user = User.query.filter_by(name=user_name).first()
+    if user:
+        user.ai_difficulty = new_difficulty
+        db.session.commit()

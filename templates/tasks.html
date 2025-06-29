@@ -7,33 +7,40 @@
 </head>
 <body>
     <div class="container">
-        <h1>Today's Tasks <span style="font-size:0.6em; color:#888;">({{ today }})</span></h1>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Today's Tasks <span style="font-size:0.6em; color:#888;">({{ today }})</span></h1>
+            <div style="display: flex; gap: 10px;">
+                <form action="{{ url_for('home.home') }}" method="get" style="margin:0;">
+                    <button class="btn" type="submit" style="padding: 8px 18px; font-size: 1em;">Home</button>
+                </form>
+                <form action="{{ url_for('history.history') }}" method="get" style="margin:0;">
+                    <button class="btn" type="submit" style="padding: 8px 18px; font-size: 1em;">Show History</button>
+                </form>
+            </div>
+        </div>
+
         <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
             <h2 style="color:#4caf50; margin-bottom: 0;">Hi, {{ user }}!</h2>
-            <form action="{{ url_for('home') }}" method="get" style="margin:0;">
-                <button class="btn" type="submit" style="padding: 8px 18px; font-size: 1em;">Change User</button>
-            </form>
-            <form action="{{ url_for('history') }}" method="get" style="margin:0;">
-                <button class="btn" type="submit" style="padding: 8px 18px; font-size: 1em;">Show History</button>
-            </form>
         </div>
 
         <!-- Big Star Section -->
         {% if all_done_before_noon %}
         <div id="big-star" style="text-align: center; margin: 30px 0;">
             <span style="font-size: 6em; color: gold;">&#11088;&#11088;</span>
-            <div style="font-size: 2em; color: #4caf50; margin-top: 10px;">Amazing! All tasks done before noon!</div>
+            <div style="font-size: 2em; color: #4caf50; margin-top: 10px;">Amazing! All tasks (for today) done before noon!</div>
         </div>
         {% elif all_done %}
         <div id="big-star" style="text-align: center; margin: 30px 0;">
             <span style="font-size: 6em; color: gold;">&#11088;</span>
-            <div style="font-size: 2em; color: #4caf50; margin-top: 10px;">Great job! All tasks are done!</div>
+            <div style="font-size: 2em; color: #4caf50; margin-top: 10px;">Great job! All tasks (for today) are done!</div>
         </div>
         {% endif %}
 
         <table class="task-table">
             <tr>
                 <th>Task</th>
+                <th>Frequency</th>
+                <th>Duration (min)</th>
                 <th>Status</th>
                 <th>Time of Complete</th>
                 <th>Action</th>
@@ -41,6 +48,14 @@
             {% for task in tasks %}
             <tr>
                 <td>{{ task.task }}</td>
+                <td>{{ task.frequency }}</td>
+                <td>
+                    {% if task.duration != "as needed" %}
+                        {{ task.duration }} <i class="clock-icon" onclick="startTimer('{{ task.duration }}')">⏰</i>
+                    {% else %}
+                        {{ task.duration }}
+                    {% endif %}
+                </td>
                 <td>
                     {% if task.status == 'TODO' %}
                         <span class="status-todo">TODO</span>
@@ -59,12 +74,12 @@
                     {% if task.status == 'TODO' %}
                     <form method="post" style="margin:0;">
                         <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
-                        <button class="btn" type="submit" name="action" value="mark">Mark Done</button>
+                        <button class="btn btn-todo" type="submit" name="action" value="mark">Mark Done</button>
                     </form>
                     {% else %}
                     <form method="post" style="margin:0;">
                         <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
-                        <button class="btn" type="submit" name="action" value="unmark">Unmark Done</button>
+                        <button class="btn btn-done" type="submit" name="action" value="unmark">Unmark Done</button>
                     </form>
                     {% endif %}
                 </td>
@@ -77,23 +92,88 @@
         <form method="post" style="display: inline-block; margin-left: 20px;">
             <button class="btn" type="submit" name="refresh_questions" value="true" style="padding: 5px 10px; font-size: 0.8em;">Refresh Questions</button>
         </form>
+        <div style="float: right; text-align: right;">
+        </div>
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px;">
             <!-- AI Problems Section -->
             <div style="flex: 1; text-align: left;">
                 {{ ai_problems | safe }}
             </div>
+        </div>
 
-            <!-- Difficulty Section -->
-            <div style="text-align: right; margin-left: 20px;">
-                <div style="font-size: 0.9em; margin-bottom: 10px;">
-                    Current Difficulty: <strong>{{ difficulty }}</strong>
-                </div>
-                <form method="post">
-                    <button class="btn" type="submit" name="difficulty_action" value="increase" style="padding: 5px 10px; font-size: 0.8em;">Increase</button>
-                    <button class="btn" type="submit" name="difficulty_action" value="decrease" style="padding: 5px 10px; font-size: 0.8em;">Decrease</button>
-                </form>
+        <!-- Controls Section at the Bottom -->
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 10px;">
+            <div style="font-size: 0.9em; display: flex; align-items: center;">
+                Current Difficulty: <strong>{{ difficulty }}</strong>
             </div>
+            <form method="post" style="margin: 0; display: flex; align-items: center;">
+                <a href="#" onclick="this.closest('form').submit();" style="text-decoration: underline; color: blue; cursor: pointer; font-size: 0.8em;">Increase</a>
+                <input type="hidden" name="difficulty_action" value="increase">
+            </form>
+            <form method="post" style="margin: 0; display: flex; align-items: center;">
+                <a href="#" onclick="this.closest('form').submit();" style="text-decoration: underline; color: blue; cursor: pointer; font-size: 0.8em;">Decrease</a>
+                <input type="hidden" name="difficulty_action" value="decrease">
+            </form>
         </div>
     </div>
+
+    <div id="timer-popup" class="hidden">
+        <div class="timer-content">
+            <span id="timer-display">00:00</span>
+            <button id="pause-button" onclick="pauseTimer()">Pause</button>
+            <button id="close-button" onclick="closeTimer()">Close</button>
+        </div>
+    </div>
+
+    <script>
+    let timerInterval;
+    let remainingTime;
+
+    function startTimer(minutes) {
+        console.log('startTimer called with minutes:', minutes); // Debugging log
+        const popup = document.getElementById('timer-popup');
+        const display = document.getElementById('timer-display');
+        const pauseButton = document.getElementById('pause-button');
+
+        remainingTime = parseInt(minutes) * 60;
+        console.log('Remaining time in seconds:', remainingTime); // Debugging log
+        popup.classList.remove('hidden');
+        console.log('Popup visibility classes:', popup.classList); // Debugging log
+        console.log('Popup element:', popup); // Debugging log
+        updateDisplay();
+
+        timerInterval = setInterval(() => {
+            if (remainingTime > 0) {
+                remainingTime--;
+                updateDisplay();
+            } else {
+                clearInterval(timerInterval);
+                display.textContent = 'Complete!';
+                pauseButton.style.display = 'none';
+            }
+        }, 1000);
+    }
+
+    function updateDisplay() {
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        document.getElementById('timer-display').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function pauseTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        } else {
+            startTimer(remainingTime / 60);
+        }
+    }
+
+    function closeTimer() {
+        const popup = document.getElementById('timer-popup');
+        popup.classList.add('hidden');
+        clearInterval(timerInterval);
+    }
+    </script>
 </body>
 </html>

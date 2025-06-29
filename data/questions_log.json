@@ -16,5 +16,53 @@
         "difficulty": 11,
         "questions": "\n<ul>\n    <li>In a magical forest, there are trees that grow only in groups of 3. Each tree produces 7 golden apples. If Dylan collects apples from 5 groups of trees, how many golden apples does he have in total?</li>\n    <li>Dylan is helping to set up a treasure hunt. He needs to place clues at different locations. If there are 4 treasure boxes, and each box has 3 unique clues, how many different clues does Dylan need to prepare in total?</li>\n    <li>Dylan is creating a pattern using colored beads. He uses 2 red beads, followed by 3 blue beads, and then 4 green beads. If he repeats this pattern 3 times, how many beads has he used in total?</li>\n</ul>\n",
         "timestamp": "2025-06-28 01:54:11"
+    },
+    {
+        "user": "Dylan",
+        "difficulty": 12,
+        "questions": "\n<ul>\n    <li>In a magical forest, there are 3 types of trees: Apple trees, Banana trees, and Coconut trees. The number of Apple trees is twice the number of Banana trees, and the number of Coconut trees is 5 more than the number of Banana trees. If there are 25 Coconut trees, how many Apple trees are there?</li>\n    <li>In a distant kingdom, a dragon can fly 4 miles in 10 minutes. If the dragon starts flying at 8:00 AM and continues flying at the same speed without stopping, what time will it be when the dragon has flown 60 miles?</li>\n    <li>On a treasure island, there are 3 hidden chests. The first chest has 15 gold coins, the second chest has 10 gold coins, and the third chest is empty. If you can move coins between chests, find a way to have exactly 8 coins in each chest. How many coins must you move, and from which chest to which chest?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 19:13:49"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 10,
+        "questions": "\n<ul>\n    <li>\n        In a magical forest, each tree has either 4 or 5 branches. If there are 12 trees with a total of 53 branches, how many trees have 4 branches?\n    </li>\n    <li>\n        A group of explorers is searching for treasure. They find a map that says the treasure is buried 7 meters north and 24 meters east from their current location. How far do they need to walk in a straight line to reach the treasure?\n    </li>\n    <li>\n        A family of rabbits doubles in number every month. If there are currently 3 rabbits, how many months will it take for the family to exceed 100 rabbits?\n    </li>\n</ul>\n",
+        "timestamp": "2025-06-28 19:24:24"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 9,
+        "questions": "\n<ul>\n    <li>In a magical garden, there are 12 rows of flowers, and each row has 5 more flowers than the previous one. If the first row has 8 flowers, how many flowers are there in total in the garden?</li>\n    <li>Imagine a local bakery where every Monday they bake twice as many muffins as the previous day. If they start with 10 muffins on Saturday, how many muffins do they bake on the following Monday?</li>\n    <li>In a race, three friends, Alice, Ben, and Charlie, run at different speeds. Alice finishes 1 minute before Ben, and Ben finishes 2 minutes before Charlie. If Charlie finishes the race in 15 minutes, how long did it take Alice to finish?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 19:25:14"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 11,
+        "questions": "\n<ul>\n    <li>In ancient Egypt, a pyramid has a square base with each side measuring 120 meters. If each layer of the pyramid is 1 meter high and the pyramid is 50 meters tall, how many layers are there in total?</li>\n    <li>Noah is solving a puzzle where he needs to arrange numbers from 1 to 9 in a 3x3 grid so that each row, column, and diagonal adds up to the same number. What is this number?</li>\n    <li>Noah sets out to build a small bridge using blocks. He uses 3 blocks for the first section, 5 blocks for the second section, 7 blocks for the third section, and so on, increasing by 2 blocks each time. How many blocks will Noah need for the fifth section?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 19:27:37"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 12,
+        "questions": "\n<ul>\n    <li>In the ancient city of Timbuktu, a merchant has 3 bags of magical beans. Each bag contains 7 red beans, 9 blue beans, and an unknown number of green beans. If there are 60 beans in total across all bags, how many green beans are there in each bag?</li>\n    <li>In a small village in Japan, a festival is held where each participant wears a unique mask. If there are 15 characters and each character has 5 different mask designs, but only 2 designs are used per character during the festival, how many different mask combinations are possible for the entire festival?</li>\n    <li>The pyramids of Giza cast long shadows during the summer solstice. If the height of a pyramid is 146 meters and its shadow is twice its height, calculate the angle of elevation of the sun at that moment.</li>\n</ul>\n",
+        "timestamp": "2025-06-28 19:27:45"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 13,
+        "questions": "<ul>\n  <li>In a magical forest, there are 3 types of trees: oak, birch, and maple. For every 2 oak trees, there are 3 birch trees, and for every 3 birch trees, there are 4 maple trees. If there are 36 maple trees, how many oak trees are there?</li>\n  <li>Noah is creating a mosaic using square tiles. He arranges the tiles in a rectangular grid that has 4 more rows than it does columns. If the total number of tiles used is 72, how many columns are in the grid?</li>\n  <li>A treasure map shows a path that includes 5 straight lines. The first line is 10 meters, the second is twice as long as the first, the third is 5 meters shorter than the second, the fourth is twice the length of the first, and the fifth is as long as the first and second combined. What is the total length of the path?</li>\n</ul>",
+        "timestamp": "2025-06-28 19:27:53"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 14,
+        "questions": "\n<ul>\n    <li>In an ancient puzzle from China, there is a farmer who owns 5 geese and 3 pigs. Each goose lays 2 eggs every day, while each pig can find 5 truffles every week. If the farmer sells each egg for $0.50 and each truffle for $2, how much money does the farmer make in 2 weeks?</li>\n    <li>In the bustling markets of Istanbul, a merchant sells silk scarves. If each scarf costs $15 and he gives a 10% discount to every third customer, how much revenue does he make if 24 customers buy scarves?</li>\n    <li>In the rainforest, a scientist is studying a group of monkeys. Every 5 minutes, one monkey claps its hands 7 times. If there are 6 monkeys and the scientist observes them for an hour, how many claps does she hear in total?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 19:28:02"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 15,
+        "questions": "\n<ul>\n    <li>In a distant land, there are two magical wells. One well doubles the number of pebbles you have when you drop one in, and the other well triples them. If Noah starts with 3 pebbles and uses each well once, what is the maximum number of pebbles he can have?</li>\n    <li>Noah is designing a garden in the shape of a perfect square. He wants to plant a different type of flower in each square meter of his garden. If he ends up using 64 different types of flowers, how long is each side of the garden?</li>\n    <li>Noah's class is going on a field trip to the zoo. There are 120 students, and they need to be divided equally into buses, with each bus holding exactly 15 students. How many buses are needed, and if one bus breaks down, how many students will be left without a bus?</li>\n</ul>\n",
+        "timestamp": "2025-06-28 19:28:13"
     }
 ]
