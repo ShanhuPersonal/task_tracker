@@ -6,3 +6,4 @@ instance/*.db
 .env
 migrations/versions/__pycache__/
 venv/
+data/questions_log.json
