@@ -5,3 +5,4 @@ instance/*.db
 *.log
 .env
 migrations/versions/__pycache__/
+venv/
