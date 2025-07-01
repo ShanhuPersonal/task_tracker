@@ -76,31 +76,37 @@
               {% endif %}
             {% endwith %}
 
-            <!-- Modal for displaying the hint -->
-            <div class="modal fade" id="hintModal" tabindex="-1" aria-labelledby="hintModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-primary-custom" id="hintModalLabel">Hint</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <!-- Custom Modal for displaying the hint -->
+            <div class="custom-modal" id="hintModal" style="display: none;">
+                <div class="custom-modal-backdrop" onclick="closeHintModal()"></div>
+                <div class="custom-modal-dialog">
+                    <div class="custom-modal-content bg-white rounded-4 shadow-lg">
+                        <div class="custom-modal-header bg-gradient-primary text-white p-4 rounded-top-4">
+                            <h5 class="modal-title text-white mb-0" id="hintModalLabel">💡 Super Hint Time! 💡</h5>
+                            <button type="button" class="custom-close-btn text-white ms-auto" onclick="closeHintModal()" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <div class="modal-body text-start">
+                        <div class="custom-modal-body p-4">
                             {% if question %}
-                            <div class="mb-3">
-                                <strong class="text-primary">Question:</strong><br>
-                                {{ question }}
+                            <div class="mb-3 p-3 bg-light rounded-3">
+                                <strong class="text-primary-custom fs-5">🤔 Question:</strong><br>
+                                <div class="mt-2 fw-semibold">{{ question }}</div>
                             </div>
-                            <hr>
-                            <div>
-                                <strong class="text-success">Hint:</strong><br>
-                                {{ hint }}
+                            <hr class="my-3">
+                            <div class="p-3 bg-success bg-opacity-10 rounded-3">
+                                <strong class="text-success-custom fs-5">💡 Your Super Hint:</strong><br>
+                                <div class="mt-2 fw-semibold">{{ hint }}</div>
                             </div>
                             {% else %}
-                            {{ hint }}
+                            <div class="p-3 bg-success bg-opacity-10 rounded-3">
+                                <strong class="text-success-custom fs-5">💡 Your Super Hint:</strong><br>
+                                <div class="mt-2 fw-semibold">{{ hint }}</div>
+                            </div>
                             {% endif %}
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <div class="custom-modal-footer p-4 border-top">
+                            <button type="button" class="btn btn-primary btn-lg" onclick="closeHintModal()">🎯 Got It! Thanks!</button>
                         </div>
                     </div>
                 </div>
@@ -111,15 +117,31 @@
 
 {% block extra_scripts %}
     <script>
+        // Function to close the hint modal
+        function closeHintModal() {
+            document.getElementById('hintModal').style.display = 'none';
+        }
+
+        // Function to show the hint modal
+        function showHintModal() {
+            document.getElementById('hintModal').style.display = 'block';
+        }
+
         // Automatically show the modal if a hint is available
         document.addEventListener('DOMContentLoaded', function () {
             {% if hint %}
             var hint = {{ hint|tojson|safe }};
             if (hint) {
-                var hintModal = new bootstrap.Modal(document.getElementById('hintModal'));
-                hintModal.show();
+                showHintModal();
             }
             {% endif %}
+        });
+
+        // Close modal when clicking outside or pressing Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeHintModal();
+            }
         });
     </script>
 {% endblock %}

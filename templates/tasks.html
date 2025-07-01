@@ -43,7 +43,6 @@
                     <thead>
                         <tr>
                             <th>🎯 Mission</th>
-                            <th>⏰ How Often</th>
                             <th>⏱️ Time Goal</th>
                             <th>🎮 Status</th>
                             <th>✅ Completed At</th>
@@ -54,7 +53,6 @@
                         {% for task in tasks %}
                         <tr>
                             <td class="fw-semibold">{{ task.task }}</td>
-                            <td>{{ task.frequency }}</td>
                             <td>
                                 {% if task.duration != "as needed" %}
                                     {{ task.duration }} min

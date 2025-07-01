@@ -3,6 +3,7 @@ from models import User, Task, TaskLog
 from openai_helper import fetch_ai_problems, get_user_difficulty, update_user_difficulty
 from datetime import datetime
 from extensions import db
+from timezone_utils import now_pst, format_pst_date, format_pst_time, format_pst_datetime, get_pst_weekday
 
 bp = Blueprint('tasks', __name__)
 
@@ -14,9 +15,9 @@ def load_tasks_for_user(user_id):
     Returns:
         list: A list of tasks with their statuses and completion times.
     """
-    today = datetime.now()
-    today_str = today.strftime("%Y-%m-%d")
-    today_weekday = today.strftime("%a")  # Get the current weekday (e.g., Mon, Tue)
+    today = now_pst()
+    today_str = format_pst_date(today)
+    today_weekday = get_pst_weekday(today)  # Get the current weekday (e.g., Mon, Tue)
 
     tasks = Task.query.filter_by(user_id=user_id).all()
     task_logs = TaskLog.query.filter_by(user_id=user_id, date=today_str).all()
@@ -43,8 +44,8 @@ def log_task_status(user_id, task, status):
         task (str): The name of the task (e.g., "AI Problems").
         status (str): The new status of the task (e.g., "Done" or "TODO").
     """
-    today = datetime.now().strftime("%Y-%m-%d")
-    time = datetime.now().strftime("%H:%M:%S") if status == "Done" else None
+    today = format_pst_date()
+    time = format_pst_time() if status == "Done" else None
 
     log = TaskLog.query.filter_by(user_id=user_id, task=task, date=today).first()
     if log:
@@ -128,7 +129,7 @@ def tasks():
     all_done = all(task['status'] == 'Done' for task in tasks)
     all_done_before_noon = check_all_done_before_noon(tasks)
 
-    today = datetime.now().strftime("%A, %B %d, %Y")
+    today = format_pst_datetime()
 
     return render_template(
         'tasks.html',

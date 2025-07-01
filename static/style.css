@@ -8,23 +8,24 @@
 /* ===== GLOBAL STYLES ===== */
 body {
     font-family: 'Fredoka', 'Comic Neue', cursive;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 25%, #fecfef 75%, #feca57 100%);
+    background: linear-gradient(135deg, #fef9f9 0%, #f8f9ff 25%, #f9fff9 75%, #fffbf0 100%);
     background-attachment: fixed;
     min-height: 100vh;
-    animation: colorShift 10s ease-in-out infinite;
+    animation: colorShift 15s ease-in-out infinite;
 }
 
 @keyframes colorShift {
-    0%, 100% { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 25%, #fecfef 75%, #feca57 100%); }
-    50% { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 25%, #fed6e3 75%, #ff9a9e 100%); }
+    0%, 100% { background: linear-gradient(135deg, #fef9f9 0%, #f8f9ff 25%, #f9fff9 75%, #fffbf0 100%); }
+    33% { background: linear-gradient(135deg, #f0fffe 0%, #fef7ff 25%, #fff8f0 75%, #f9f9ff 100%); }
+    66% { background: linear-gradient(135deg, #fff8f8 0%, #f0fff8 25%, #f8f0ff 75%, #fffff0 100%); }
 }
 
 /* ===== CONTAINERS ===== */
 .app-container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.92);
     border-radius: 30px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 0 0 3px #ff6b6b, 0 0 0 6px #4ecdc4;
-    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 0 0 3px rgba(255,107,107,0.2), 0 0 0 6px rgba(78,205,196,0.2);
+    backdrop-filter: blur(10px);
     border: 3px solid transparent;
     background-clip: padding-box;
     position: relative;
@@ -38,8 +39,8 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fd79a8, #ff6b6b);
-    animation: rotate 20s linear infinite;
+    background: conic-gradient(from 0deg, rgba(255,107,107,0.3), rgba(78,205,196,0.3), rgba(69,183,209,0.3), rgba(150,206,180,0.3), rgba(255,234,167,0.3), rgba(253,121,168,0.3), rgba(255,107,107,0.3));
+    animation: rotate 25s linear infinite;
     z-index: -1;
 }
 
@@ -54,7 +55,7 @@ body {
     font-weight: 600;
 }
 .text-success-custom { 
-    color: #4ecdc4 !important; 
+    color: #2d5f5d !important; 
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     font-weight: 600;
 }
@@ -430,4 +431,45 @@ body {
     }
 }
 
-/* ===== EXISTING MODAL FIXES ===== */
+/* ===== HINT MODAL CUSTOM STYLES ===== */
+#hintModal .custom-modal-content {
+    background: linear-gradient(145deg, #ffffff, #f8f9fa) !important;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 0 3px rgba(108, 92, 231, 0.3);
+}
+
+#hintModal .custom-modal-header {
+    background: linear-gradient(45deg, #6c5ce7, #a29bfe, #fd79a8) !important;
+    border-bottom: none;
+}
+
+#hintModal .custom-close-btn {
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: none;
+    background: none;
+    transition: all 0.3s ease;
+}
+
+#hintModal .custom-close-btn:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+#hintModal .btn-primary {
+    background: linear-gradient(45deg, #00b894, #55efc4) !important;
+    border: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+#hintModal .btn-primary:hover {
+    background: linear-gradient(45deg, #00a085, #4dd0e1) !important;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
+}
+
+/* ===== HINT MODAL FIXES ===== */

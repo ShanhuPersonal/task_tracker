@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, session, redirect, url_for
 from models import TaskLog, User, Task
 from datetime import datetime
 from collections import defaultdict
+from timezone_utils import get_pst_weekday
 
 bp = Blueprint('history', __name__)
 
@@ -34,7 +35,7 @@ def history():
     # Calculate star status for each date
     date_stars = {}
     # Filter tasks based on frequency for each date
-    today_weekday = datetime.now().strftime("%a")
+    today_weekday = get_pst_weekday()
     for date, tasks in grouped.items():
         tasks_with_status = {task['task']: task for task in tasks}
         for task in all_tasks:

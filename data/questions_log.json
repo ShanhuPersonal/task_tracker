@@ -106,5 +106,25 @@
         "difficulty": 11,
         "questions": "\n<ul>\n    <li>In the bustling market of Marrakech, a merchant has 24 colorful carpets. If he wants to arrange them in equal stacks with more than one carpet in each stack, how many different ways can he arrange the carpets?</li>\n    <li>In the magical forests of Finland, forest gnomes are planting enchanted flowers. Each gnome can plant 6 flowers in an hour. If there are 5 gnomes working together, how many flowers can they plant in 3 hours?</li>\n    <li>At a traditional Japanese festival, there are 12 lanterns hanging in a row. Every third lantern is red, starting from the first one. How many of the lanterns are red?</li>\n</ul>\n",
         "timestamp": "2025-06-29 00:14:51"
+    },
+    {
+        "user": "Noah",
+        "difficulty": 15,
+        "questions_html": "<ul><li>Noah is exploring the rainforest and he sees a giant vine that is 60 feet long. If the vine is cut into pieces that are each 5 feet long, how many pieces will he have?</li><li>In a distant land, there is a magical tree that doubles the number of apples on its branches every day. If the tree starts with 2 apples on day one, how many apples will it have on day four?</li><li>Noah is creating a secret code using numbers. He starts with the number 8 and multiplies it by 3. Then he adds 12 to the result. What is the final number?</li></ul>",
+        "questions_and_hints": [
+            {
+                "question": "Noah is exploring the rainforest and he sees a giant vine that is 60 feet long. If the vine is cut into pieces that are each 5 feet long, how many pieces will he have?",
+                "hint": "Think about how many times 5 can fit into 60."
+            },
+            {
+                "question": "In a distant land, there is a magical tree that doubles the number of apples on its branches every day. If the tree starts with 2 apples on day one, how many apples will it have on day four?",
+                "hint": "Double the number of apples each day and keep track of the total."
+            },
+            {
+                "question": "Noah is creating a secret code using numbers. He starts with the number 8 and multiplies it by 3. Then he adds 12 to the result. What is the final number?",
+                "hint": "First, multiply 8 by 3, then add 12 to see what you get."
+            }
+        ],
+        "timestamp": "2025-06-30 21:24:55"
     }
 ]
