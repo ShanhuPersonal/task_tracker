@@ -59,6 +59,23 @@ def history():
                         "duration": task.duration
                     })
 
+        # Sort tasks: completed tasks first (ordered by completion time), then TODO tasks
+        def sort_tasks(task):
+            if task['status'] == 'Done' and task['time']:
+                # For completed tasks, sort by completion time (earliest first)
+                try:
+                    return (0, datetime.strptime(task['time'], "%H:%M:%S"))
+                except:
+                    return (0, datetime.min)  # If time parsing fails, put at beginning
+            elif task['status'] == 'Done':
+                # Completed tasks without time go after timed completed tasks
+                return (1, datetime.min)
+            else:
+                # TODO tasks go to the bottom, sorted alphabetically by task name
+                return (2, task['task'])
+        
+        tasks.sort(key=sort_tasks)
+
         all_done = all(task['status'] == 'Done' for task in tasks)
         all_done_before_noon = False
         if all_done:
