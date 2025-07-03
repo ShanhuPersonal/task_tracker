@@ -58,6 +58,7 @@ def log_task_status(user_id, task, status, page_numbers=None):
     else:
         log = TaskLog(user_id=user_id, task=task, date=today, status=status, time=time, completed_page_numbers=page_numbers)
         db.session.add(log)
+    
     db.session.commit()
 
 def check_all_done_before_noon(tasks):
@@ -103,12 +104,15 @@ def tasks():
                 if task_to_update['log_completed_page_numbers']:
                     # For tasks that need page numbers, we'll handle this via JavaScript
                     # The form submission will be intercepted by JavaScript
-                    pass
+                    # But if we somehow get here, redirect back to avoid confusion
+                    return redirect(url_for('tasks.tasks'))
                 else:
                     # For normal tasks, mark as done immediately
                     log_task_status(user_id, task_to_update['task'], 'Done')
             elif action == 'unmark':
-                log_task_status(user_id, task_to_update['task'], 'TODO')
+                log_task_status(user_id, task_to_update['task'], 'TODO', '')
+            
+            # Always reload tasks after any status change
             tasks = load_tasks_for_user(user_id)
 
         difficulty_action = request.form.get('difficulty_action')

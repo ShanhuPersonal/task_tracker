@@ -156,21 +156,26 @@
         let remainingTime;
         let currentTaskName = '';
 
-        // Handle task completion forms
+        // Handle task completion forms using event delegation
         document.addEventListener('DOMContentLoaded', function() {
-            const taskForms = document.querySelectorAll('.task-form');
-            taskForms.forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    const requiresPages = this.dataset.requiresPages === 'true';
-                    const taskName = this.dataset.taskName;
-                    const action = this.querySelector('button[name="action"]').value;
+            // Use event delegation on the document body to catch all form submissions
+            document.body.addEventListener('submit', function(e) {
+                // Check if the submitted form is a task form
+                if (e.target.classList.contains('task-form')) {
+                    const form = e.target;
+                    const requiresPages = form.dataset.requiresPages === 'true';
+                    const taskName = form.dataset.taskName;
+                    const action = form.querySelector('button[name="action"]').value;
                     
                     if (action === 'mark' && requiresPages) {
                         e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
                         showPageNumbersModal(taskName);
+                        return false;
                     }
                     // For tasks that don't require pages or for unmarking, let the form submit normally
-                });
+                }
             });
 
             // Add ESC key listener for all modals
