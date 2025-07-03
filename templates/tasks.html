@@ -77,7 +77,7 @@
                             </td>
                             <td>
                                 {% if task.status == 'TODO' %}
-                                    <form method="post" class="d-inline task-form" data-task-idx="{{ loop.index0 }}" data-task-name="{{ task.task }}" data-requires-pages="{{ task.log_completed_page_numbers }}">
+                                    <form method="post" class="d-inline task-form" data-task-idx="{{ loop.index0 }}" data-task-name="{{ task.task }}" data-requires-pages="{{ 'true' if task.log_completed_page_numbers else 'false' }}">
                                         <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
                                         <button class="btn btn-success btn-sm" type="submit" name="action" value="mark">🎯 CRUSH IT!</button>
                                     </form>
@@ -161,7 +161,7 @@
             const taskForms = document.querySelectorAll('.task-form');
             taskForms.forEach(form => {
                 form.addEventListener('submit', function(e) {
-                    const requiresPages = this.dataset.requiresPages === 'True';
+                    const requiresPages = this.dataset.requiresPages === 'true';
                     const taskName = this.dataset.taskName;
                     const action = this.querySelector('button[name="action"]').value;
                     
