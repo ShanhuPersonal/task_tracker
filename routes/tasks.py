@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
 from models import User, Task, TaskLog
 from openai_helper import fetch_ai_problems, get_user_difficulty, update_user_difficulty
 from datetime import datetime
@@ -32,17 +32,19 @@ def load_tasks_for_user(user_id):
                 "status": log.status if log else "TODO",
                 "frequency": task.frequency,
                 "duration": task.duration if task.duration is not None else "as needed",  # Show 'as needed' for empty durations
-                "time": log.time if log and log.status == "Done" else None
+                "time": log.time if log and log.status == "Done" else None,
+                "log_completed_page_numbers": task.log_completed_page_numbers  # Add this field
             })
     return task_list
 
-def log_task_status(user_id, task, status):
+def log_task_status(user_id, task, status, page_numbers=None):
     """
     Logs the status of a task for a specific user in the task log table.
     Parameters:
         user_id (int): The ID of the user.
         task (str): The name of the task (e.g., "AI Problems").
         status (str): The new status of the task (e.g., "Done" or "TODO").
+        page_numbers (str): The page numbers completed (optional).
     """
     today = format_pst_date()
     time = format_pst_time() if status == "Done" else None
@@ -51,8 +53,10 @@ def log_task_status(user_id, task, status):
     if log:
         log.status = status
         log.time = time
+        if page_numbers is not None:
+            log.completed_page_numbers = page_numbers
     else:
-        log = TaskLog(user_id=user_id, task=task, date=today, status=status, time=time)
+        log = TaskLog(user_id=user_id, task=task, date=today, status=status, time=time, completed_page_numbers=page_numbers)
         db.session.add(log)
     db.session.commit()
 
@@ -95,7 +99,14 @@ def tasks():
             task_idx = int(task_idx)
             task_to_update = tasks[task_idx]
             if action == 'mark':
-                log_task_status(user_id, task_to_update['task'], 'Done')
+                # Check if this task requires page numbers
+                if task_to_update['log_completed_page_numbers']:
+                    # For tasks that need page numbers, we'll handle this via JavaScript
+                    # The form submission will be intercepted by JavaScript
+                    pass
+                else:
+                    # For normal tasks, mark as done immediately
+                    log_task_status(user_id, task_to_update['task'], 'Done')
             elif action == 'unmark':
                 log_task_status(user_id, task_to_update['task'], 'TODO')
             tasks = load_tasks_for_user(user_id)
@@ -137,3 +148,21 @@ def tasks():
         tasks=tasks,
         today=today,
     )
+
+@bp.route('/submit_page_numbers', methods=['POST'])
+def submit_page_numbers():
+    """Handle page numbers submission via AJAX"""
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'error': 'Not logged in'}), 401
+    
+    user_id = session['user_id']
+    task_name = request.json.get('task_name')
+    page_numbers = request.json.get('page_numbers', '').strip()
+    
+    if not task_name:
+        return jsonify({'success': False, 'error': 'Task name is required'}), 400
+    
+    # Log the task as done with page numbers
+    log_task_status(user_id, task_name, 'Done', page_numbers)
+    
+    return jsonify({'success': True})

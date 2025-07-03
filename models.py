@@ -16,6 +16,7 @@ class Task(db.Model):
     task = db.Column(db.String(200), nullable=False)
     frequency = db.Column(db.String(50), nullable=False)
     duration = db.Column(Integer, nullable=True)  # Duration in minutes, default is empty
+    log_completed_page_numbers = db.Column(db.Boolean, nullable=False, default=False)  # Whether to log page numbers
 
 class TaskLog(db.Model):
     __tablename__ = 'task_logs'
@@ -25,3 +26,4 @@ class TaskLog(db.Model):
     date = db.Column(db.String(10), nullable=False)
     status = db.Column(db.String(10), nullable=False)
     time = db.Column(db.String(8), nullable=True)
+    completed_page_numbers = db.Column(db.String(200), nullable=True)  # Page numbers completed

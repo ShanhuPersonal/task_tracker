@@ -32,6 +32,7 @@
                                     <th>Duration (min)</th>
                                     <th>Status</th>
                                     <th>Completion Time</th>
+                                    <th>Pages Completed</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,6 +49,13 @@
                                         {% endif %}
                                     </td>
                                     <td>{{ row['time'] if row['time'] else 'N/A' }}</td>
+                                    <td>
+                                        {% if row['completed_page_numbers'] %}
+                                            <span class="badge bg-info text-dark">📚 {{ row['completed_page_numbers'] }}</span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

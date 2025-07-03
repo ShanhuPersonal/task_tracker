@@ -77,7 +77,7 @@
                             </td>
                             <td>
                                 {% if task.status == 'TODO' %}
-                                    <form method="post" class="d-inline">
+                                    <form method="post" class="d-inline task-form" data-task-idx="{{ loop.index0 }}" data-task-name="{{ task.task }}" data-requires-pages="{{ task.log_completed_page_numbers }}">
                                         <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
                                         <button class="btn btn-success btn-sm" type="submit" name="action" value="mark">🎯 CRUSH IT!</button>
                                     </form>
@@ -99,6 +99,30 @@
                 <form action="{{ url_for('ai_problems.ai_problems') }}" method="get">
                     <button class="btn btn-primary btn-lg" type="submit">🧠 Brain Challenge Time! 🧠</button>
                 </form>
+            </div>
+
+            <!-- Page Numbers Modal -->
+            <div class="custom-modal" id="pageNumbersModal" style="display: none;">
+                <div class="custom-modal-dialog" style="position: relative; z-index: 1060;">
+                    <div class="custom-modal-content" style="background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); border: 5px solid #fff; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+                        <div class="custom-modal-header" style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 25px 25px 0 0; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                            <h5 style="color: white; font-family: 'Fredoka', cursive; font-weight: 700; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin: 0;">📚 Page Numbers Complete! 📚</h5>
+                            <button type="button" class="custom-close-btn" onclick="closePageNumbersModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;">✕</button>
+                        </div>
+                        <div class="custom-modal-body" style="padding: 2rem; text-align: center;">
+                            <div style="background: rgba(255,255,255,0.9); border-radius: 20px; padding: 2rem; margin: 1rem 0;">
+                                <p id="pageNumbersTaskName" style="color: #764ba2; font-size: 1.4rem; margin-bottom: 1rem; font-weight: 600;"></p>
+                                <p style="color: #667eea; font-size: 1.1rem; margin-bottom: 1.5rem;">What page numbers did you complete? 🎯</p>
+                                <input type="text" id="pageNumbersInput" class="form-control" placeholder="e.g., 15, 16, 17 or 15-20" style="font-size: 1.1rem; padding: 0.75rem; border-radius: 15px; border: 3px solid #4ecdc4; text-align: center; margin-bottom: 1rem;">
+                                <p style="color: #999; font-size: 0.9rem; margin: 0;">💡 Use commas to separate multiple pages (e.g., 15, 16, 17)</p>
+                            </div>
+                        </div>
+                        <div class="custom-modal-footer" style="padding: 1.5rem; display: flex; justify-content: center; gap: 1rem;">
+                            <button type="button" class="btn btn-success btn-lg" onclick="submitPageNumbers()" style="border-radius: 25px; font-weight: 700; text-transform: uppercase;">✅ COMPLETE!</button>
+                            <button type="button" class="btn btn-secondary btn-lg" onclick="closePageNumbersModal()" style="border-radius: 25px; font-weight: 700; text-transform: uppercase;">❌ Cancel</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Super Cool Timer Modal -->
@@ -130,6 +154,89 @@
     <script>
         let timerInterval;
         let remainingTime;
+        let currentTaskName = '';
+
+        // Handle task completion forms
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskForms = document.querySelectorAll('.task-form');
+            taskForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const requiresPages = this.dataset.requiresPages === 'True';
+                    const taskName = this.dataset.taskName;
+                    const action = this.querySelector('button[name="action"]').value;
+                    
+                    if (action === 'mark' && requiresPages) {
+                        e.preventDefault();
+                        showPageNumbersModal(taskName);
+                    }
+                    // For tasks that don't require pages or for unmarking, let the form submit normally
+                });
+            });
+
+            // Add ESC key listener for all modals
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    const timerModal = document.getElementById('timerModal');
+                    const pageModal = document.getElementById('pageNumbersModal');
+                    if (timerModal.style.display === 'block') {
+                        closeTimer();
+                    } else if (pageModal.style.display === 'block') {
+                        closePageNumbersModal();
+                    }
+                }
+            });
+        });
+
+        function showPageNumbersModal(taskName) {
+            currentTaskName = taskName;
+            document.getElementById('pageNumbersTaskName').textContent = `Task: ${taskName}`;
+            document.getElementById('pageNumbersInput').value = '';
+            document.getElementById('pageNumbersModal').style.display = 'block';
+            // Focus on the input field
+            setTimeout(() => {
+                document.getElementById('pageNumbersInput').focus();
+            }, 100);
+        }
+
+        function closePageNumbersModal() {
+            document.getElementById('pageNumbersModal').style.display = 'none';
+            currentTaskName = '';
+        }
+
+        function submitPageNumbers() {
+            const pageNumbers = document.getElementById('pageNumbersInput').value.trim();
+            
+            if (!pageNumbers) {
+                alert('Please enter the page numbers you completed!');
+                return;
+            }
+
+            // Submit via AJAX
+            fetch('/submit_page_numbers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    task_name: currentTaskName,
+                    page_numbers: pageNumbers
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closePageNumbersModal();
+                    // Reload the page to show updated status
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to submit page numbers'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to submit page numbers. Please try again.');
+            });
+        }
 
         function startTimer(minutes, taskName) {
             console.log('🚀 Starting epic timer for:', taskName);

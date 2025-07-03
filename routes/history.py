@@ -19,18 +19,26 @@ def history():
     # Query task logs for the user
     task_logs = TaskLog.query.filter_by(user_id=user_id).all()
 
+    # Fetch all tasks for the user from the database
+    all_tasks = Task.query.filter_by(user_id=user.id).all()
+
     # Group by date, ordered by date desc
     grouped = defaultdict(list)
+    
+    # Create a lookup for task details
+    task_details = {task.task: {'frequency': task.frequency, 'duration': task.duration} for task in all_tasks}
+    
     for log in task_logs:
+        task_info = task_details.get(log.task, {'frequency': 'Unknown', 'duration': None})
         grouped[log.date].append({
             "task": log.task,
             "status": log.status,
-            "time": log.time
+            "time": log.time,
+            "completed_page_numbers": log.completed_page_numbers,
+            "frequency": task_info['frequency'],
+            "duration": task_info['duration']
         })
     sorted_dates = sorted(grouped.keys(), reverse=True)
-
-    # Fetch all tasks for the user from the database
-    all_tasks = Task.query.filter_by(user_id=user.id).all()
 
     # Calculate star status for each date
     date_stars = {}
@@ -42,7 +50,14 @@ def history():
             # Check if the task should be shown on this date based on its frequency
             if task.frequency.lower() == "daily" or today_weekday in [day.strip().capitalize() for day in task.frequency.split(",")]:
                 if task.task not in tasks_with_status:
-                    tasks.append({"task": task.task, "status": "TODO", "time": None})
+                    tasks.append({
+                        "task": task.task, 
+                        "status": "TODO", 
+                        "time": None, 
+                        "completed_page_numbers": None,
+                        "frequency": task.frequency,
+                        "duration": task.duration
+                    })
 
         all_done = all(task['status'] == 'Done' for task in tasks)
         all_done_before_noon = False

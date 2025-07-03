@@ -25,11 +25,13 @@ def parent():
             new_task = request.form.get('new_task')
             frequency = request.form.get('frequency')
             duration = request.form.get('duration')
+            log_page_numbers = request.form.get('log_completed_page_numbers') == 'on'
             task = Task.query.filter_by(user_id=user_id, task=old_task).first()
             if task:
                 task.task = new_task
                 task.frequency = frequency
                 task.duration = int(duration) if duration else None
+                task.log_completed_page_numbers = log_page_numbers
                 db.session.commit()
 
         elif action == 'delete':
@@ -43,8 +45,11 @@ def parent():
             new_task = request.form.get('task')
             frequency = request.form.get('frequency')
             duration = request.form.get('duration')
+            log_page_numbers = request.form.get('log_completed_page_numbers') == 'on'
             if new_task and frequency:
-                task = Task(user_id=user_id, task=new_task, frequency=frequency, duration=int(duration) if duration else None)
+                task = Task(user_id=user_id, task=new_task, frequency=frequency, 
+                           duration=int(duration) if duration else None,
+                           log_completed_page_numbers=log_page_numbers)
                 db.session.add(task)
                 db.session.commit()
         
