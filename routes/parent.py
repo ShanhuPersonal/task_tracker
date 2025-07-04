@@ -1,12 +1,20 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from models import User, Task
+from models import User, Task, Parent
 from extensions import db
 
 bp = Blueprint('parent', __name__)
 
 @bp.route('/parent', methods=['GET', 'POST'])
 def parent():
-    users = User.query.filter_by(parent="Shanhu").all()
+    # Get the parent by name (could be made dynamic later)
+    parent_obj = Parent.query.filter_by(name="Shanhu").first()
+    if not parent_obj:
+        # Create parent if it doesn't exist
+        parent_obj = Parent(name="Shanhu")
+        db.session.add(parent_obj)
+        db.session.commit()
+    
+    users = User.query.filter_by(parent_id=parent_obj.id).all()
     selected_user_id = request.args.get('user_id')
 
     if not selected_user_id and users:
@@ -68,6 +76,47 @@ def parent():
                     user.ai_difficulty = max(1, min(20, difficulty))
                     db.session.commit()
                     return redirect(url_for('parent.parent', user_id=selected_user_id))
+        
+        elif action == 'add_user':
+            name = request.form.get('user_name')
+            dob = request.form.get('user_dob')
+            ai_difficulty = request.form.get('user_ai_difficulty')
+            if name and dob:
+                # Default AI difficulty to 10 if not provided
+                difficulty = int(ai_difficulty) if ai_difficulty else 10
+                # Ensure AI difficulty is between 1-20
+                difficulty = max(1, min(20, difficulty))
+                new_user = User(name=name, dob=dob, ai_difficulty=difficulty, parent_id=parent_obj.id)
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect(url_for('parent.parent', user_id=selected_user_id))
+        
+        elif action == 'copy_tasks':
+            target_user_id = request.form.get('target_user_id')
+            source_user_id = request.form.get('source_user_id')
+            
+            if target_user_id and source_user_id and target_user_id != source_user_id:
+                # Get tasks from source user
+                source_tasks = Task.query.filter_by(user_id=source_user_id).all()
+                
+                # Get existing tasks for target user to avoid duplicates
+                existing_tasks = Task.query.filter_by(user_id=target_user_id).all()
+                existing_task_names = {task.task for task in existing_tasks}
+                
+                # Copy tasks that don't already exist
+                for task in source_tasks:
+                    if task.task not in existing_task_names:
+                        new_task = Task(
+                            user_id=target_user_id,
+                            task=task.task,
+                            frequency=task.frequency,
+                            duration=task.duration,
+                            log_completed_page_numbers=task.log_completed_page_numbers
+                        )
+                        db.session.add(new_task)
+                
+                db.session.commit()
+                return redirect(url_for('parent.parent', user_id=target_user_id))
 
         return redirect(url_for('parent.parent', user_id=user_id))
 

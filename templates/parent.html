@@ -53,6 +53,25 @@
                                 </form>
                             </tr>
                             {% endfor %}
+                            <!-- Add User Row -->
+                            <tr class="table-secondary">
+                                <form method="post" id="addUserForm">
+                                    <input type="hidden" name="action" value="add_user">
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm" name="user_name" placeholder="New User Name" required>
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control form-control-sm" name="user_dob" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm" name="user_ai_difficulty" 
+                                               value="10" min="1" max="20" required>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-sm btn-primary">Add User</button>
+                                    </td>
+                                </form>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -80,6 +99,38 @@
                         </div>
                     </div>
                 </form>
+
+                <!-- Copy Tasks Section -->
+                {% if selected_user %}
+                <div class="card mb-3" style="background-color: #f8f9fa;">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">📋 Copy Tasks</h5>
+                        <form method="post" class="mb-0">
+                            <input type="hidden" name="action" value="copy_tasks">
+                            <input type="hidden" name="target_user_id" value="{{ selected_user.id }}">
+                            <div class="row align-items-end">
+                                <div class="col-md-6">
+                                    <label for="source_user_select" class="form-label">Copy tasks from:</label>
+                                    <select name="source_user_id" id="source_user_select" class="form-select" required>
+                                        <option value="">Select user to copy from...</option>
+                                        {% for user in users %}
+                                        {% if user.id != selected_user.id %}
+                                        <option value="{{ user.id }}">{{ user.name }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-info" onclick="return confirm('This will copy all tasks from the selected user to {{ selected_user.name }}. Existing tasks will not be duplicated. Continue?');">
+                                        📋 Copy Tasks
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <small class="text-muted">This will copy all tasks from the selected user to {{ selected_user.name }}. Duplicate tasks will be skipped.</small>
+                    </div>
+                </div>
+                {% endif %}
 
                 <!-- Automatically Display Tasks for Selected User -->
                 {% if selected_user %}

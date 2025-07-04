@@ -1,13 +1,21 @@
 from extensions import db
 from sqlalchemy import Integer
 
+class Parent(db.Model):
+    __tablename__ = 'parents'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    
+    # Relationship to users
+    users = db.relationship('User', backref='parent_ref', lazy=True)
+
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     dob = db.Column(db.String(10), nullable=False)
     ai_difficulty = db.Column(db.Integer, nullable=False, default=10)
-    parent = db.Column(db.String(50), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'), nullable=False)
 
 class Task(db.Model):
     __tablename__ = 'tasks'
