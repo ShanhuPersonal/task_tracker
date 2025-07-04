@@ -7,3 +7,6 @@ instance/*.db
 migrations/versions/__pycache__/
 venv/
 data/questions_log.json
+nohup.out
+*.tar.gz
+
