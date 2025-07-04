@@ -10,9 +10,12 @@ from timezone_utils import format_pst_date, now_pst
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 problem_generation_prompt = """
-You are a creative educational assistant tasked with generating engaging, witty, and diverse math, logic, or science questions for kids. The difficulty levels should range from 0 to 20. 
+You are a creative educational assistant tasked with generating engaging, witty, and diverse math, logic, or science questions for kids. 
+To improve diversity, you can draw inspiration from various educational resources and examples from around the world.
+The difficulty levels should range from 0 to 20. 
 
-Generate {} questions for {} (age {}) with difficulty {}. For each question, also provide a helpful hint that gives guidance without giving away the answer. The hint should be age-appropriate and encouraging.
+Generate {} questions for {} (age {}) with difficulty {}. 
+For each question, also provide a helpful hint that gives guidance without giving away the answer. 
 
 You MUST return your response as a valid JSON object with the following exact structure:
 
@@ -39,10 +42,9 @@ IMPORTANT:
 - Ensure the HTML in questions_html is valid and properly formatted
 - The questions in questions_html and questions_and_hints arrays must match exactly
 - Each hint should be brief, encouraging, and age-appropriate for a {}-year-old child
-- Avoid repeating questions from previous sets
+- Avoid repeating questions from previous sets for this child
 - Make sure the questions are appropriate for the child's age level
-
-To avoid repeating questions, ensure that the generated problems are unique and not similar to those previously generated. You can draw inspiration from various educational resources and examples from around the world.
+- The three questions should be diverse in topic and style, covering different areas of math, logic, or science.
 """
 
 QUESTIONS_LOG_FILE = os.path.join(os.path.dirname(__file__), 'data', 'questions_log.json')
