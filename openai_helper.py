@@ -10,9 +10,9 @@ from timezone_utils import format_pst_date, now_pst
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 problem_generation_prompt = """
-You are a creative educational assistant tasked with generating engaging, witty, and diverse math, logic, or science questions for kids. The difficulty levels should range from 0 to 20. As of June 2025, Dylan is 8 years old, about to enter 3rd grade. Noah is 10 years old, about to enter 5th grade. Avoid repeating questions from prior sets and aim for variety inspired by examples from around the world. Each question should be phrased clearly and encourage thoughtful problem solving.
+You are a creative educational assistant tasked with generating engaging, witty, and diverse math, logic, or science questions for kids. The difficulty levels should range from 0 to 20. 
 
-Generate {} questions for {} with difficulty {}. For each question, also provide a helpful hint that gives guidance without giving away the answer. The hint should be age-appropriate and encouraging.
+Generate {} questions for {} (age {}) with difficulty {}. For each question, also provide a helpful hint that gives guidance without giving away the answer. The hint should be age-appropriate and encouraging.
 
 You MUST return your response as a valid JSON object with the following exact structure:
 
@@ -38,13 +38,36 @@ IMPORTANT:
 - Return ONLY the JSON object, no additional text
 - Ensure the HTML in questions_html is valid and properly formatted
 - The questions in questions_html and questions_and_hints arrays must match exactly
-- Each hint should be brief, encouraging, and age-appropriate
+- Each hint should be brief, encouraging, and age-appropriate for a {}-year-old child
 - Avoid repeating questions from previous sets
+- Make sure the questions are appropriate for the child's age level
 
 To avoid repeating questions, ensure that the generated problems are unique and not similar to those previously generated. You can draw inspiration from various educational resources and examples from around the world.
 """
 
 QUESTIONS_LOG_FILE = os.path.join(os.path.dirname(__file__), 'data', 'questions_log.json')
+
+def calculate_age(dob_string):
+    """
+    Calculate the age from date of birth string.
+    Parameters:
+        dob_string (str): Date of birth in format "YYYY-MM-DD".
+    Returns:
+        int: Age in years, or None if dob_string is invalid.
+    """
+    try:
+        if not dob_string:
+            return None
+        dob = datetime.strptime(dob_string, "%Y-%m-%d")
+        today = datetime.now()
+        age = today.year - dob.year
+        # Adjust if birthday hasn't occurred this year
+        if today.month < dob.month or (today.month == dob.month and today.day < dob.day):
+            age -= 1
+        return age
+    except ValueError:
+        print(f"Invalid date format for DOB: {dob_string}")
+        return None
 
 def get_user_difficulty(user_name):
     """
@@ -73,6 +96,17 @@ def fetch_ai_problems(num_questions=3, user="Dylan", difficulty=12, force_refres
         dict: Dictionary with 'questions_html' and 'questions_and_hints' keys, or error structure if API call fails.
     """
     try:
+        # Get user's age from database
+        user_obj = User.query.filter_by(name=user).first()
+        user_age = None
+        if user_obj and user_obj.dob:
+            user_age = calculate_age(user_obj.dob)
+        
+        # Default age if not found or invalid
+        if user_age is None:
+            user_age = 8  # Default age if DOB is not available
+            print(f"Warning: Could not calculate age for user {user}, using default age {user_age}")
+
         # Check if questions for the same user, difficulty, and date already exist
         today = format_pst_date()
         if not force_refresh and os.path.exists(QUESTIONS_LOG_FILE):
@@ -88,14 +122,14 @@ def fetch_ai_problems(num_questions=3, user="Dylan", difficulty=12, force_refres
                 # Sort by timestamp in descending order to get the most recent entry
                 if filtered_entries:
                     most_recent_entry = sorted(filtered_entries, key=lambda x: x['timestamp'], reverse=True)[0]
-                    print(f"Using most recent cached questions for {user} at difficulty {difficulty} from {today}")
+                    print(f"Using most recent cached questions for {user} (age {user_age}) at difficulty {difficulty} from {today}")
                     return {
                         'questions_html': most_recent_entry['questions_html'],
                         'questions_and_hints': most_recent_entry['questions_and_hints']
                     }
 
         # If no cached questions exist or force_refresh is True, call OpenAI API
-        prompt = problem_generation_prompt.format(num_questions, user, difficulty)
+        prompt = problem_generation_prompt.format(num_questions, user, user_age, difficulty, user_age)
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
