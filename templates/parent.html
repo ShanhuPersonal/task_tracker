@@ -211,14 +211,24 @@
     </div>
 
     <script>
-        // Add client-side validation for DOB field when adding a user
-        document.getElementById('addUserForm').addEventListener('submit', function(e) {
-            const dobField = this.querySelector('input[name="user_dob"]');
+        // Validation function for user forms
+        function validateUserForm(form, action) {
+            const nameField = form.querySelector('input[name="user_name"]');
+            const dobField = form.querySelector('input[name="user_dob"]');
+            
+            const nameValue = nameField.value.trim();
             const dobValue = dobField.value.trim();
             
+            // Check if name is empty
+            if (!nameValue) {
+                alert('Please enter a valid user name before ' + action + ' the user.');
+                nameField.focus();
+                return false;
+            }
+            
+            // Check if DOB is empty
             if (!dobValue) {
-                e.preventDefault();
-                alert('Please enter a valid date of birth before adding the user.\n\nThe date of birth is required to generate age-appropriate AI questions.');
+                alert('Please enter a valid date of birth before ' + action + ' the user.\n\nThe date of birth is required to generate age-appropriate AI questions.');
                 dobField.focus();
                 return false;
             }
@@ -228,7 +238,6 @@
             const today = new Date();
             
             if (dobDate > today) {
-                e.preventDefault();
                 alert('Date of birth cannot be in the future. Please enter a valid date.');
                 dobField.focus();
                 return false;
@@ -240,60 +249,33 @@
             const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate()) ? age - 1 : age;
             
             if (actualAge > 25) {
-                e.preventDefault();
                 alert('Please check the date of birth. The calculated age seems unusually high for this application.');
                 dobField.focus();
                 return false;
             }
             
             if (actualAge < 0) {
-                e.preventDefault();
                 alert('Please enter a valid date of birth.');
                 dobField.focus();
                 return false;
             }
+            
+            return true;
+        }
+
+        // Add client-side validation for adding users
+        document.getElementById('addUserForm').addEventListener('submit', function(e) {
+            if (!validateUserForm(this, 'adding')) {
+                e.preventDefault();
+                return false;
+            }
         });
 
-        // Add similar validation for editing users
+        // Add validation for editing users
         document.querySelectorAll('[id^="editUserForm"]').forEach(function(form) {
             form.addEventListener('submit', function(e) {
-                const dobField = this.querySelector('input[name="user_dob"]');
-                const dobValue = dobField.value.trim();
-                
-                if (!dobValue) {
+                if (!validateUserForm(this, 'saving')) {
                     e.preventDefault();
-                    alert('Please enter a valid date of birth.\n\nThe date of birth is required to generate age-appropriate AI questions.');
-                    dobField.focus();
-                    return false;
-                }
-                
-                // Additional validation to ensure it's a valid date
-                const dobDate = new Date(dobValue);
-                const today = new Date();
-                
-                if (dobDate > today) {
-                    e.preventDefault();
-                    alert('Date of birth cannot be in the future. Please enter a valid date.');
-                    dobField.focus();
-                    return false;
-                }
-                
-                // Check if the person would be too old (e.g., over 25 years old)
-                const age = today.getFullYear() - dobDate.getFullYear();
-                const monthDiff = today.getMonth() - dobDate.getMonth();
-                const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate()) ? age - 1 : age;
-                
-                if (actualAge > 25) {
-                    e.preventDefault();
-                    alert('Please check the date of birth. The calculated age seems unusually high for this application.');
-                    dobField.focus();
-                    return false;
-                }
-                
-                if (actualAge < 0) {
-                    e.preventDefault();
-                    alert('Please enter a valid date of birth.');
-                    dobField.focus();
                     return false;
                 }
             });

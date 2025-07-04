@@ -4,6 +4,23 @@ from extensions import db
 
 bp = Blueprint('parent', __name__)
 
+def validate_user_data(name, dob):
+    """
+    Validates user data for name and date of birth.
+    Parameters:
+        name (str): User name to validate.
+        dob (str): Date of birth to validate.
+    Returns:
+        str or None: Error message if validation fails, None if validation passes.
+    """
+    if not name or name.strip() == '':
+        return 'User name is required'
+    
+    if not dob or dob.strip() == '':
+        return 'Date of birth is required'
+    
+    return None
+
 @bp.route('/parent', methods=['GET', 'POST'])
 def parent():
     # Get the parent by name (could be made dynamic later)
@@ -68,9 +85,10 @@ def parent():
             dob = request.form.get('user_dob')
             ai_difficulty = request.form.get('user_ai_difficulty')
             if user_id and name and dob and ai_difficulty:
-                # Validate DOB is not empty
-                if not dob or dob.strip() == '':
-                    return redirect(url_for('parent.parent', user_id=selected_user_id, error='Date of birth is required'))
+                # Validate user data
+                validation_error = validate_user_data(name, dob)
+                if validation_error:
+                    return redirect(url_for('parent.parent', user_id=selected_user_id, error=validation_error))
                 
                 user = User.query.get(user_id)
                 if user:
@@ -81,16 +99,22 @@ def parent():
                     user.ai_difficulty = max(1, min(20, difficulty))
                     db.session.commit()
                     return redirect(url_for('parent.parent', user_id=selected_user_id))
+            else:
+                # If required fields are missing, redirect with error
+                error_msg = 'All fields (name, date of birth, and difficulty) are required'
+                return redirect(url_for('parent.parent', user_id=selected_user_id, error=error_msg))
         
         elif action == 'add_user':
             name = request.form.get('user_name')
             dob = request.form.get('user_dob')
             ai_difficulty = request.form.get('user_ai_difficulty')
+            
+            # Validate user data
+            validation_error = validate_user_data(name, dob)
+            if validation_error:
+                return redirect(url_for('parent.parent', user_id=selected_user_id, error=validation_error))
+            
             if name and dob:
-                # Validate DOB is not empty
-                if not dob or dob.strip() == '':
-                    return redirect(url_for('parent.parent', user_id=selected_user_id, error='Date of birth is required'))
-                
                 # Default AI difficulty to 10 if not provided
                 difficulty = int(ai_difficulty) if ai_difficulty else 10
                 # Ensure AI difficulty is between 1-20
